@@ -1,0 +1,19 @@
+spring:
+    profiles:
+        active: dev
+    datasource:
+        password:
+        url:
+        username:
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+        hibernate:
+            ddl-auto: update
+
+logging:
+    level:
+        org:
+            springframework:
+                jdbc: DEBUG
