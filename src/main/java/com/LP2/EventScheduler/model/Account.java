@@ -18,15 +18,11 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private String picture;
-
-    @Column(nullable = false)
-    private String banner;
-
     @Column(columnDefinition = "TEXT")
     private String about;
 
+    private String picture;
+    private String banner;
     private String location;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
