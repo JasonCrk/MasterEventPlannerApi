@@ -34,10 +34,12 @@ public class Invitation {
     @JoinColumn(name = "inviting_id")
     private User inviting;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
     private InvitationStatus status = InvitationStatus.PENDING;
 
+    @Builder.Default
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime notifiedAt = LocalDateTime.now();

@@ -48,6 +48,7 @@ public class Event {
     @Column(nullable = false)
     private String local;
 
+    @Builder.Default
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
     @Enumerated(EnumType.STRING)
     private EventStatus status = EventStatus.PENDING;
