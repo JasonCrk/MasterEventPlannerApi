@@ -1,4 +1,4 @@
-package com.LP2.EventScheduler.dto;
+package com.LP2.EventScheduler.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

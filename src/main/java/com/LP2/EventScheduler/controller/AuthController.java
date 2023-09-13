@@ -1,7 +1,7 @@
 package com.LP2.EventScheduler.controller;
 
-import com.LP2.EventScheduler.dto.LoginDTO;
-import com.LP2.EventScheduler.dto.RegisterDTO;
+import com.LP2.EventScheduler.dto.auth.LoginDTO;
+import com.LP2.EventScheduler.dto.auth.RegisterDTO;
 import com.LP2.EventScheduler.responses.auth.JwtResponse;
 import com.LP2.EventScheduler.service.auth.AuthService;
 
