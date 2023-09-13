@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+    event_scheduler_db:
+        container_name: event_scheduler_db
+        image: mysql:8.0.33
+        restart: always
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: event_scheduler_password
+            MYSQL_DATABASE: event_scheduler_db
