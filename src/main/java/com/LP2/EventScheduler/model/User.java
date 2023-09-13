@@ -5,6 +5,7 @@ import com.LP2.EventScheduler.model.enums.Role;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,9 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Builder
 @Data
+@Entity
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
@@ -67,6 +69,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "connector")
     private List<Connection> myConnections;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
