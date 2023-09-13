@@ -10,7 +10,16 @@ spring:
             hibernate:
                 dialect: org.hibernate.dialect.MySQLDialect
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop
+        database: mysql
+
+application:
+    security:
+        jwt:
+            secret-key:
+            expiration: 86400000 # 1 day in milliseconds
+            refresh-token:
+                expiration: 604800000 # 1 week in milliseconds
 
 logging:
     level:
