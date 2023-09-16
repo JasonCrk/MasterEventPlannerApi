@@ -1,7 +1,5 @@
 package com.LP2.EventScheduler.model;
 
-import com.LP2.EventScheduler.model.keys.ConnectionId;
-
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,17 +19,16 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "connections")
 public class Connection {
-    @EmbeddedId
-    private ConnectionId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
-    @MapsId("connector")
-    @JoinColumn(name = "connector_id")
+    @JoinColumn(name = "connector_id", nullable = false)
     private User connector;
 
     @ManyToOne
-    @MapsId("connectingId")
-    @JoinColumn(name = "connecting_id")
+    @JoinColumn(name = "connecting_id", nullable = false)
     private User connecting;
 
     @CreatedDate
