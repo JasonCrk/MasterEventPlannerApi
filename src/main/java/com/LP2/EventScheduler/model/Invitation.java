@@ -1,7 +1,6 @@
 package com.LP2.EventScheduler.model;
 
 import com.LP2.EventScheduler.model.enums.InvitationStatus;
-import com.LP2.EventScheduler.model.keys.InvitationId;
 
 import jakarta.persistence.*;
 
@@ -13,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,17 +21,16 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "invitations")
 public class Invitation {
-    @EmbeddedId
-    private InvitationId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
-    @MapsId("inviterId")
-    @JoinColumn(name = "inviter_id")
+    @JoinColumn(name = "inviter_id", nullable = false)
     private User inviter;
 
     @ManyToOne
-    @MapsId("invitingId")
-    @JoinColumn(name = "inviting_id")
+    @JoinColumn(name = "inviting_id", nullable = false)
     private User inviting;
 
     @Builder.Default
