@@ -10,7 +10,7 @@ import com.LP2.EventScheduler.model.enums.TokenType;
 import com.LP2.EventScheduler.repository.AccountRepository;
 import com.LP2.EventScheduler.repository.TokenRepository;
 import com.LP2.EventScheduler.repository.UserRepository;
-import com.LP2.EventScheduler.responses.auth.JwtResponse;
+import com.LP2.EventScheduler.response.auth.JwtResponse;
 import com.LP2.EventScheduler.security.JwtService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

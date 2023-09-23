@@ -1,4 +1,4 @@
-package com.LP2.EventScheduler.responses.auth;
+package com.LP2.EventScheduler.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
