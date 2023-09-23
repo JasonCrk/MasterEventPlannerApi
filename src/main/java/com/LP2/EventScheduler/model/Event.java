@@ -49,7 +49,7 @@ public class Event {
     private String local;
 
     @Builder.Default
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
     @Enumerated(EnumType.STRING)
     private EventStatus status = EventStatus.PENDING;
 
@@ -57,8 +57,8 @@ public class Event {
     private LocalDateTime realizationDate;
 
     @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToMany(mappedBy = "eventsParticipating")
     private List<User> participants;
