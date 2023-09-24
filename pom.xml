@@ -14,7 +14,7 @@
 	<name>EventScheduler</name>
 	<description>Una REST API para una app de programador de eventos</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>17</java.version>
 		<spring-cloud-azure.version>5.5.0</spring-cloud-azure.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<org.projectlombok.version>1.18.28</org.projectlombok.version>
@@ -89,6 +89,17 @@
 			<artifactId>mockito-core</artifactId>
 			<version>5.5.0</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.1.214</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

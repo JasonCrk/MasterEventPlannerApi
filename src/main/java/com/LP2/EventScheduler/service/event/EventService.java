@@ -1,7 +1,13 @@
 package com.LP2.EventScheduler.service.event;
 
-import java.util.List;
+import com.LP2.EventScheduler.filters.EventSortingOptions;
+import com.LP2.EventScheduler.response.ListResponse;
+import com.LP2.EventScheduler.response.event.EventItem;
 
 public interface EventService {
-    List<?> searchPublicEvents();
+    ListResponse<EventItem> searchPublicEvents(
+            String searchQuery,
+            EventSortingOptions sortBy,
+            String categoryName
+    );
 }

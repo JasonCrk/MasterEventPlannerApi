@@ -1,0 +1,25 @@
+spring:
+    datasource:
+        password: sa
+        url: jdbc:h2:mem:event_scheduler_db_test
+        username: sa
+        driverClassName: org.h2.Driver
+    jpa:
+        spring:
+            jpa:
+                database-platform: org.hibernate.dialect.H2Dialect
+        database: h2
+
+application:
+    security:
+        jwt:
+            secret-key: 1234sdfasdf1434123sddfasdf12341234asdfaw1324
+            expiration: 86400000 # 1 day in milliseconds
+            refresh-token:
+                expiration: 604800000 # 1 week in milliseconds
+
+logging:
+    level:
+        org:
+            springframework:
+                jdbc: DEBUG
