@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping(path = "/api/auth")
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class AuthController {
     public ResponseEntity<JwtResponse> login(
             @Valid @RequestBody LoginDTO loginData
     ) {
-        return ResponseEntity.ok(this.authService.login(loginData));
+        return new ResponseEntity<>(this.authService.login(loginData), HttpStatus.OK);
     }
 
     @PostMapping(path = "/register")
@@ -42,10 +40,13 @@ public class AuthController {
     }
 
     @PostMapping(path = "/refresh-token")
-    public void refreshToken(
+    public ResponseEntity<JwtResponse> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
-    ) throws IOException {
-        this.authService.refreshToken(request, response);
+    ) {
+        return new ResponseEntity<>(
+                this.authService.refreshToken(request, response),
+                HttpStatus.OK
+        );
     }
 }

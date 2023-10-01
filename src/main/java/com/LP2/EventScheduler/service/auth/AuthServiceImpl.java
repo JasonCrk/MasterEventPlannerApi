@@ -2,6 +2,8 @@ package com.LP2.EventScheduler.service.auth;
 
 import com.LP2.EventScheduler.dto.auth.LoginDTO;
 import com.LP2.EventScheduler.dto.auth.RegisterDTO;
+import com.LP2.EventScheduler.exception.InvalidJwtException;
+import com.LP2.EventScheduler.exception.NotAuthenticatedException;
 import com.LP2.EventScheduler.model.Account;
 import com.LP2.EventScheduler.model.Token;
 import com.LP2.EventScheduler.model.User;
@@ -13,8 +15,6 @@ import com.LP2.EventScheduler.repository.UserRepository;
 import com.LP2.EventScheduler.response.auth.JwtResponse;
 import com.LP2.EventScheduler.security.JwtService;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,8 +25,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -89,42 +87,41 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void refreshToken(
+    public JwtResponse refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
-    ) throws IOException {
+    ) {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         final String refreshToken;
         final String userEmail;
 
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
-        }
+        if (authHeader == null ||!authHeader.startsWith("Bearer "))
+            throw new NotAuthenticatedException();
 
         refreshToken = authHeader.substring(7);
 
         userEmail = jwtService.extractUsername(refreshToken);
 
-        if (userEmail != null) {
-            var user = this.userRepository.findByEmail(userEmail)
-                    .orElseThrow();
+        if (userEmail == null)
+            throw new InvalidJwtException("The authentication token is invalid");
 
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
+        var user = this.userRepository.findByEmail(userEmail)
+                .orElseThrow();
 
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
+        if (!jwtService.isTokenValid(refreshToken, user))
+            throw new InvalidJwtException("The refresh token is invalid");
 
-                var authResponse = JwtResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .authHeader("Bearer")
-                        .build();
+        var accessToken = jwtService.generateToken(user);
 
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
-        }
+        revokeAllUserTokens(user);
+        saveUserToken(user, accessToken);
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .authHeader("Bearer")
+                .build();
     }
 
     private void saveUserToken(User user, String jwtToken) {
