@@ -1,17 +1,20 @@
 package com.LP2.EventScheduler.controller;
 
+import com.LP2.EventScheduler.dto.event.CreateEventDTO;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
+import com.LP2.EventScheduler.model.User;
+import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.service.event.EventService;
 
+import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/events")
@@ -29,5 +32,13 @@ public class EventController {
         return ResponseEntity.ok(
                 eventService.searchPublicEvents(searchQuery, sortBy, categoryName)
         );
+    }
+
+    @PostMapping
+    public ResponseEntity<EntityWithMessageResponse<EventItem>> scheduleEvent(
+            @Valid @RequestBody CreateEventDTO eventData,
+            @RequestAttribute("user") User user
+    ) {
+        return new ResponseEntity<>(this.eventService.scheduleEvent(eventData, user), HttpStatus.CREATED);
     }
 }

@@ -14,5 +14,12 @@ public interface EventMapper {
     EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
     @Mapping(source = "coordinator.account.picture", target = "coordinator.picture")
+    @Mapping(expression = "java(event.getRealizationDate().toString())", target = "realizationDate")
+    @Mapping(expression = "java(event.getCreatedAt().toString())", target = "createdAt")
     List<EventItem> toList(List<Event> events);
+
+    @Mapping(source = "coordinator.account.picture", target = "coordinator.picture")
+    @Mapping(expression = "java(event.getRealizationDate().toString())", target = "realizationDate")
+    @Mapping(expression = "java(event.getCreatedAt().toString())", target = "createdAt")
+    EventItem toResponse(Event event);
 }
