@@ -60,6 +60,6 @@ public class Event {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToMany(mappedBy = "eventsParticipating")
-    private List<User> participants;
+    @OneToMany(mappedBy = "event")
+    private List<Participation> participants;
 }
