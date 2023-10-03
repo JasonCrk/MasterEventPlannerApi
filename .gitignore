@@ -1,4 +1,5 @@
 src/main/resources/application.yml
+src/main/resources/firebase-account.json
 **/application-production.yml
 
 ### DEFAULT ###
