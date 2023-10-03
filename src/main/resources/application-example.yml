@@ -3,6 +3,11 @@ spring:
         password:
         url:
         username:
+    mail:
+        host:
+        port:
+        username:
+        password:
     jpa:
         properties:
             hibernate:
