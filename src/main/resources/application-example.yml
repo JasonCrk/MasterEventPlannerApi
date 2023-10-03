@@ -15,6 +15,17 @@ spring:
         hibernate:
             ddl-auto: create-drop
         database: mysql
+    quartz:
+        job-store-type: jdbc
+        jdbc:
+            initialize-schema: always
+        jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driveDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            dataSource: myDS
+            tablePrefix: QRTZ_
+        threadPool:
+            threadCount: 5
 
 application:
     security:

@@ -21,6 +21,18 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ScheduleCreationException.class)
+    public ResponseEntity<ErrorResponse> handlerScheduleCreationException(
+            ScheduleCreationException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(NotAuthenticatedException.class)
     public ResponseEntity<ErrorResponse> handlerNotAuthenticatedException(
             NotAuthenticatedException ex,
