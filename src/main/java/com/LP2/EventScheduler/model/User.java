@@ -51,13 +51,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "coordinator")
     private List<Event> events;
 
-    @ManyToMany
-    @JoinTable(
-            name = "participation",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id")
-    )
-    private List<Event> eventsParticipating;
+    @OneToMany(mappedBy = "user")
+    private List<Participation> eventsParticipating;
 
     @OneToMany(mappedBy = "inviting")
     private List<Invitation> invitationsReceived;

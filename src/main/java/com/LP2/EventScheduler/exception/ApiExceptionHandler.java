@@ -21,6 +21,18 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ScheduleCreationException.class)
+    public ResponseEntity<ErrorResponse> handlerScheduleCreationException(
+            ScheduleCreationException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(NotAuthenticatedException.class)
     public ResponseEntity<ErrorResponse> handlerNotAuthenticatedException(
             NotAuthenticatedException ex,
@@ -33,6 +45,18 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerEventNotFoundException(
+            EventNotFoundException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(InvalidJwtException.class)
     public ResponseEntity<ErrorResponse> handlerInvalidJwtException(
             InvalidJwtException ex,
@@ -43,5 +67,17 @@ public class ApiExceptionHandler {
         errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(FailedNotificationSendingException.class)
+    public ResponseEntity<ErrorResponse> handlerFailedNotificationSendingException(
+            FailedNotificationSendingException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

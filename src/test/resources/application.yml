@@ -18,6 +18,9 @@ application:
             refresh-token:
                 expiration: 604800000 # 1 week in milliseconds
 
+firebase:
+    enabled: false
+
 logging:
     level:
         org:
