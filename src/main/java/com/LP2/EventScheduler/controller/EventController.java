@@ -1,10 +1,12 @@
 package com.LP2.EventScheduler.controller;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
+import com.LP2.EventScheduler.dto.event.JoinEventDTO;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
+import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.service.event.EventService;
 
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/events")
@@ -40,5 +44,14 @@ public class EventController {
             @RequestAttribute("user") User user
     ) {
         return new ResponseEntity<>(this.eventService.scheduleEvent(eventData, user), HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/{eventId}/join")
+    public ResponseEntity<MessageResponse> joinTheEvent(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User user,
+            @Valid @RequestBody JoinEventDTO joinData
+    ) {
+        return new ResponseEntity<>(this.eventService.joinEvent(eventId, joinData, user), HttpStatus.CREATED);
     }
 }

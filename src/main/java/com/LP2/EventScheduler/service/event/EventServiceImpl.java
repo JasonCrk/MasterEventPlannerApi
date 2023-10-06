@@ -1,17 +1,22 @@
 package com.LP2.EventScheduler.service.event;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
-import com.LP2.EventScheduler.exception.CategoryNotFoundException;
-import com.LP2.EventScheduler.exception.ScheduleCreationException;
+import com.LP2.EventScheduler.dto.event.JoinEventDTO;
+import com.LP2.EventScheduler.exception.*;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.Category;
 import com.LP2.EventScheduler.model.Event;
+import com.LP2.EventScheduler.model.Participation;
 import com.LP2.EventScheduler.model.User;
+import com.LP2.EventScheduler.model.enums.EventStatus;
 import com.LP2.EventScheduler.model.enums.Visibility;
 import com.LP2.EventScheduler.repository.CategoryRepository;
+import com.LP2.EventScheduler.repository.ConnectionRepository;
 import com.LP2.EventScheduler.repository.EventRepository;
+import com.LP2.EventScheduler.repository.ParticipationRepository;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
+import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.response.event.EventMapper;
 import com.LP2.EventScheduler.scheduler.SchedulerService;
@@ -23,6 +28,8 @@ import org.quartz.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,8 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
+    private final ParticipationRepository participationRepository;
+    private final ConnectionRepository connectionRepository;
 
     private final Scheduler scheduler;
     private final SchedulerService schedulerService;
@@ -106,5 +115,41 @@ public class EventServiceImpl implements EventService {
                 "The event has been created successfully",
                 mappedEvent
         );
+    }
+
+    @Override
+    public MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user) {
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+
+        if (event.getCoordinator().getId().equals(user.getId()))
+            throw new ResourceBelongsTheUserException("Cannot join an event you created");
+
+        if (event.getVisibility().equals(Visibility.ONLY_CONNECTIONS)) {
+            boolean usersConnectionExist = this.connectionRepository.existsConnectionBetweenUsers(event.getCoordinator(), user);
+            if (!usersConnectionExist)
+                throw new ConnectionNotFoundException("The event is only for connections");
+        }
+
+        if (!event.getStatus().equals(EventStatus.PENDING))
+            throw new UnexpectedResourceValueException("The event must be in a PENDING state");
+
+        Optional<Participation> userParticipationToEvent = this.participationRepository.findByUserAndEvent(user, event);
+
+        if (userParticipationToEvent.isPresent()) {
+            this.participationRepository.delete(userParticipationToEvent.get());
+            return new MessageResponse("Participation removed");
+        }
+
+        Participation userParticipation = Participation.builder()
+                .event(event)
+                .user(user)
+                .token(joinData.getToken())
+                .build();
+
+        this.participationRepository.save(userParticipation);
+
+        return new MessageResponse("Participation added");
     }
 }
