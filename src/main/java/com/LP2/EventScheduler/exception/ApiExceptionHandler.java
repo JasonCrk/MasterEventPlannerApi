@@ -93,6 +93,18 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IsNotOwnerException.class)
+    public ResponseEntity<ErrorResponse> handlerIsNotOwnerException(
+            IsNotOwnerException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(UnexpectedResourceValueException.class)
     public ResponseEntity<ErrorResponse> handlerUnexpectedResourceValueException(
             UnexpectedResourceValueException ex,

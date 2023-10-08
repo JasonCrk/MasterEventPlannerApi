@@ -2,6 +2,7 @@ package com.LP2.EventScheduler.controller;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
+import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
@@ -53,5 +54,14 @@ public class EventController {
             @Valid @RequestBody JoinEventDTO joinData
     ) {
         return new ResponseEntity<>(this.eventService.joinEvent(eventId, joinData, user), HttpStatus.CREATED);
+    }
+
+    @PatchMapping(path = "/{eventId}")
+    public ResponseEntity<MessageResponse> updateEvent(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User user,
+            @Valid @RequestBody UpdateEventDTO eventData
+    ) {
+        return new ResponseEntity<>(this.eventService.updateEvent(eventId, eventData, user), HttpStatus.OK);
     }
 }
