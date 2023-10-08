@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JoinEventDTO {
 
-    @NotBlank(message = "Jason")
+    @NotBlank(message = "The token is required")
     private String token;
 }
