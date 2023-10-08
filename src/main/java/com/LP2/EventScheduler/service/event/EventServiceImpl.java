@@ -2,6 +2,7 @@ package com.LP2.EventScheduler.service.event;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
+import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
 import com.LP2.EventScheduler.exception.*;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.Category;
@@ -151,5 +152,41 @@ public class EventServiceImpl implements EventService {
         this.participationRepository.save(userParticipation);
 
         return new MessageResponse("Participation added");
+    }
+
+    @Override
+    public MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user) {
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+
+        if (!event.getCoordinator().getId().equals(user.getId()))
+            throw new IsNotOwnerException("You are not the event coordinator");
+
+        if (eventData.getCategory() != null) {
+            Category category = this.categoryRepository
+                    .findById(eventData.getCategory())
+                    .orElseThrow(CategoryNotFoundException::new);
+            event.setCategory(category);
+        }
+
+        if (eventData.getName() != null)
+            event.setName(eventData.getName());
+
+        if (eventData.getDescription() != null)
+            event.setDescription(eventData.getDescription());
+
+        if (eventData.getRealizationDate() != null)
+            event.setRealizationDate(eventData.getRealizationDate());
+
+        if (eventData.getLocal() != null)
+            event.setLocal(eventData.getLocal());
+
+        if (eventData.getVisibility() != null)
+            event.setVisibility(eventData.getVisibility());
+
+        this.eventRepository.save(event);
+
+        return new MessageResponse("Event updated successfully");
     }
 }

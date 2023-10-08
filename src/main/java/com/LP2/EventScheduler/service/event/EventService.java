@@ -2,6 +2,7 @@ package com.LP2.EventScheduler.service.event;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
+import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
@@ -19,4 +20,5 @@ public interface EventService {
     );
     EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user);
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);
+    MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user);
 }
