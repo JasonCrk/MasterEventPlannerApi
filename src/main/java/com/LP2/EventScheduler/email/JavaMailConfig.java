@@ -1,4 +1,4 @@
-package com.LP2.EventScheduler.mails;
+package com.LP2.EventScheduler.email;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,13 +13,13 @@ import java.util.Properties;
 @Profile({"dev", "production"})
 public class JavaMailConfig {
 
-    @Value("{spring.mail.username}")
+    @Value("${spring.mail.username}")
     private String username;
 
-    @Value("{spring.mail.password}")
+    @Value("${spring.mail.password}")
     private String password;
 
-    @Value("{spring.mail.host}")
+    @Value("${spring.mail.host}")
     private String host;
 
     @Value("${spring.mail.port}")
