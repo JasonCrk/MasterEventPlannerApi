@@ -7,7 +7,6 @@ Una REST API hecha para una aplicación de programador de eventos.
 - Arturo Anticona
 - Edie Paz Reyes
 - Emerzon Javier Kolki Martinez __(Coordinador)__
-- Erson
 
 ## Technologies
 
