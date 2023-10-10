@@ -9,6 +9,15 @@ spring:
             jpa:
                 database-platform: org.hibernate.dialect.H2Dialect
         database: h2
+    mail:
+        host: smtp
+        port: 123
+        username: test
+        password: test
+        smtp:
+            auth: true
+            starttls:
+                enable: true
 
 application:
     security:
@@ -19,9 +28,6 @@ application:
                 expiration: 604800000 # 1 week in milliseconds
 
 firebase:
-    enabled: false
-
-mail:
     enabled: false
 
 logging:

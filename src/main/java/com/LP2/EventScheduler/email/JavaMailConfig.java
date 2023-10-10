@@ -23,13 +23,8 @@ public class JavaMailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
-    @Value("${mail.enabled}")
-    private boolean enabled;
-
     @Bean
     public JavaMailSender javaMailSender() {
-        if (!enabled) return null;
-
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);
