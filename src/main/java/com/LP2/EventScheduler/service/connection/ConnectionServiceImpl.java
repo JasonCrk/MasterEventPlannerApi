@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +64,10 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
 
         return new MessageResponse("Invitation sent successfully");
+    }
+
+    @Override
+    public MessageResponse acceptInvitation(UUID invitationId, User user) {
+        return null;
     }
 }
