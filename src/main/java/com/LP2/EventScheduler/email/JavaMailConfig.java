@@ -3,14 +3,12 @@ package com.LP2.EventScheduler.email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
 @Configuration
-@Profile({"dev", "production"})
 public class JavaMailConfig {
 
     @Value("${spring.mail.username}")
@@ -25,8 +23,13 @@ public class JavaMailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
+    @Value("${mail.enabled}")
+    private boolean enabled;
+
     @Bean
     public JavaMailSender javaMailSender() {
+        if (!enabled) return null;
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);

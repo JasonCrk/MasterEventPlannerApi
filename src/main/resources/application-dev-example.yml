@@ -38,6 +38,9 @@ application:
 firebase:
     enabled: true
 
+mail:
+    enabled: true
+
 logging:
     level:
         org:

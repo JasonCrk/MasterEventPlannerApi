@@ -21,6 +21,9 @@ application:
 firebase:
     enabled: false
 
+mail:
+    enabled: false
+
 logging:
     level:
         org:
