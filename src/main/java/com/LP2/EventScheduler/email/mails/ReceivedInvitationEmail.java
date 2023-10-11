@@ -13,12 +13,12 @@ public class ReceivedInvitationEmail implements EmailContent {
 
     @Override
     public String getBody(Map<String, String> data) {
-        String defautPicture = "https://simulacionymedicina.es/wp-content/uploads/2015/11/default-avatar-300x300-1.jpg";
+        String defaultPicture = "https://simulacionymedicina.es/wp-content/uploads/2015/11/default-avatar-300x300-1.jpg";
 
         String inviterUsername = data.get("inviterUsername");
-        String inviterPicture = data.get("inviterPicture") == null ? defautPicture : data.get("inviterPicture");
+        String inviterPicture = data.get("inviterPicture") == null ? defaultPicture : data.get("inviterPicture");
         String invitingUsername = data.get("invitingUsername");
-        String invitingPicture = data.get("invitingPicture") == null ? defautPicture : data.get("invitingPicture");
+        String invitingPicture = data.get("invitingPicture") == null ? defaultPicture : data.get("invitingPicture");
 
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n" +

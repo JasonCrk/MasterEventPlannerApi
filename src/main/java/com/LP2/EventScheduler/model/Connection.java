@@ -31,7 +31,8 @@ public class Connection {
     @JoinColumn(name = "connecting_id", nullable = false)
     private User connecting;
 
+    @Builder.Default
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime connectedAt;
+    private LocalDateTime connectedAt = LocalDateTime.now();
 }
