@@ -20,173 +20,297 @@ public class ReceivedInvitationEmail implements EmailContent {
         String invitingUsername = data.get("invitingUsername");
         String invitingPicture = data.get("invitingPicture") == null ? defaultPicture : data.get("invitingPicture");
 
-        return "<!DOCTYPE html>\n" +
-                "<html lang=\"en\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n" +
+        return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
+                "\n" +
                 "<head>\n" +
-                "<title></title>\n" +
-                "<meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"/>\n" +
-                "<meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]-->\n" +
-                "<style>\n" +
-                "\t\t* {\n" +
-                "\t\t\tbox-sizing: border-box;\n" +
-                "\t\t}\n" +
+                "  <!--[if gte mso 9]>\n" +
+                "<xml>\n" +
+                "  <o:OfficeDocumentSettings>\n" +
+                "    <o:AllowPNG/>\n" +
+                "    <o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "  </o:OfficeDocumentSettings>\n" +
+                "</xml>\n" +
+                "<![endif]-->\n" +
+                "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "  <meta name=\"x-apple-disable-message-reformatting\">\n" +
+                "  <!--[if !mso]><!-->\n" +
+                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><!--<![endif]-->\n" +
+                "  <title></title>\n" +
                 "\n" +
-                "\t\tbody {\n" +
-                "\t\t\tmargin: 0;\n" +
-                "\t\t\tpadding: 0;\n" +
-                "\t\t}\n" +
+                "  <style type=\"text/css\">\n" +
+                "    @media only screen and (min-width: 520px) {\n" +
+                "      .u-row {\n" +
+                "        width: 500px !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\ta[x-apple-data-detectors] {\n" +
-                "\t\t\tcolor: inherit !important;\n" +
-                "\t\t\ttext-decoration: inherit !important;\n" +
-                "\t\t}\n" +
+                "      .u-row .u-col {\n" +
+                "        vertical-align: top;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\t#MessageViewBody a {\n" +
-                "\t\t\tcolor: inherit;\n" +
-                "\t\t\ttext-decoration: none;\n" +
-                "\t\t}\n" +
+                "      .u-row .u-col-33p33 {\n" +
+                "        width: 166.65px !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\tp {\n" +
-                "\t\t\tline-height: inherit\n" +
-                "\t\t}\n" +
+                "      .u-row .u-col-100 {\n" +
+                "        width: 500px !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\t.desktop_hide,\n" +
-                "\t\t.desktop_hide table {\n" +
-                "\t\t\tmso-hide: all;\n" +
-                "\t\t\tdisplay: none;\n" +
-                "\t\t\tmax-height: 0px;\n" +
-                "\t\t\toverflow: hidden;\n" +
-                "\t\t}\n" +
+                "    }\n" +
                 "\n" +
-                "\t\t.image_block img+div {\n" +
-                "\t\t\tdisplay: none;\n" +
-                "\t\t}\n" +
+                "    @media (max-width: 520px) {\n" +
+                "      .u-row-container {\n" +
+                "        max-width: 100% !important;\n" +
+                "        padding-left: 0px !important;\n" +
+                "        padding-right: 0px !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\t@media (max-width:520px) {\n" +
-                "\t\t\t.desktop_hide table.icons-inner {\n" +
-                "\t\t\t\tdisplay: inline-block !important;\n" +
-                "\t\t\t}\n" +
+                "      .u-row .u-col {\n" +
+                "        min-width: 320px !important;\n" +
+                "        max-width: 100% !important;\n" +
+                "        display: block !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\t\t.icons-inner {\n" +
-                "\t\t\t\ttext-align: center;\n" +
-                "\t\t\t}\n" +
+                "      .u-row {\n" +
+                "        width: 100% !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\t\t.icons-inner td {\n" +
-                "\t\t\t\tmargin: 0 auto;\n" +
-                "\t\t\t}\n" +
+                "      .u-col {\n" +
+                "        width: 100% !important;\n" +
+                "      }\n" +
                 "\n" +
-                "\t\t\t.mobile_hide {\n" +
-                "\t\t\t\tdisplay: none;\n" +
-                "\t\t\t}\n" +
+                "      .u-col>div {\n" +
+                "        margin: 0 auto;\n" +
+                "      }\n" +
+                "    }\n" +
                 "\n" +
-                "\t\t\t.row-content {\n" +
-                "\t\t\t\twidth: 100% !important;\n" +
-                "\t\t\t}\n" +
+                "    body {\n" +
+                "      margin: 0;\n" +
+                "      padding: 0;\n" +
+                "    }\n" +
                 "\n" +
-                "\t\t\t.stack .column {\n" +
-                "\t\t\t\twidth: 100%;\n" +
-                "\t\t\t\tdisplay: block;\n" +
-                "\t\t\t}\n" +
+                "    table,\n" +
+                "    tr,\n" +
+                "    td {\n" +
+                "      vertical-align: top;\n" +
+                "      border-collapse: collapse;\n" +
+                "    }\n" +
                 "\n" +
-                "\t\t\t.mobile_hide {\n" +
-                "\t\t\t\tmin-height: 0;\n" +
-                "\t\t\t\tmax-height: 0;\n" +
-                "\t\t\t\tmax-width: 0;\n" +
-                "\t\t\t\toverflow: hidden;\n" +
-                "\t\t\t\tfont-size: 0px;\n" +
-                "\t\t\t}\n" +
+                "    p {\n" +
+                "      margin: 0;\n" +
+                "    }\n" +
                 "\n" +
-                "\t\t\t.desktop_hide,\n" +
-                "\t\t\t.desktop_hide table {\n" +
-                "\t\t\t\tdisplay: table !important;\n" +
-                "\t\t\t\tmax-height: none !important;\n" +
-                "\t\t\t}\n" +
-                "\t\t}\n" +
-                "\t</style>\n" +
+                "    .ie-container table,\n" +
+                "    .mso-container table {\n" +
+                "      table-layout: fixed;\n" +
+                "    }\n" +
+                "\n" +
+                "    * {\n" +
+                "      line-height: inherit;\n" +
+                "    }\n" +
+                "\n" +
+                "    a[x-apple-data-detectors='true'] {\n" +
+                "      color: inherit !important;\n" +
+                "      text-decoration: none !important;\n" +
+                "    }\n" +
+                "\n" +
+                "    table,\n" +
+                "    td {\n" +
+                "      color: #000000;\n" +
+                "    }\n" +
+                "  </style>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "  <!--[if !mso]><!-->\n" +
+                "  <link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700\" rel=\"stylesheet\" type=\"text/css\"><!--<![endif]-->\n" +
+                "\n" +
                 "</head>\n" +
-                "<body style=\"margin: 0; background-color: #fff; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;\">\n" +
-                "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"nl-container\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fff;\" width=\"100%\">\n" +
-                "<tbody>\n" +
-                "<tr>\n" +
-                "<td>\n" +
-                "<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"row row-1\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\" width=\"100%\">\n" +
-                "<tbody>\n" +
-                "<tr>\n" +
-                "<td>\n" +
-                "<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"row-content stack\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; width: 500px; margin: 0 auto;\" width=\"500\">\n" +
-                "<tbody>\n" +
-                "<tr>\n" +
-                "<td class=\"column column-1\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;\" width=\"100%\">\n" +
-                "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"html_block block-1\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\" width=\"100%\">\n" +
-                "<tr>\n" +
-                "<td class=\"pad\">\n" +
-                "<div align=\"center\" style=\"font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;text-align:center;\"><div class=\"our-class\" style=\"color:#fff;\">\n" +
-                "<h1 style=\"font-size: 2rem; color: #000;\">" + inviterUsername + " has sent you a connection invitation</h1>\n" +
-                "<div style=\"display: grid; grid-template-columns: 1fr 4fr 1fr; color: #000; padding: 0px 5px\">\n" +
-                "<div style=\"display: flex; flex-direction: column; align-items: center;\">\n" +
-                "<img alt=\"avatar\" src=\"" + inviterPicture + "\" style=\"border-radius: 100%; width: 120px; height: 120px; border: 4px solid #FF9F14;\"/>\n" +
-                "<p style=\"font-size: 1.1rem;\">" + invitingUsername + "</p>\n" +
-                "</div>\n" +
-                "<div style=\"display: flex; justify-content: center; flex-direction: column; height: 70%;\">\n" +
-                "<div style=\"height: 5px; background-color: #FF9F14;\"></div>\n" +
-                "</div>\n" +
-                "<div style=\"display: flex; flex-direction: column; align-items: center;\">\n" +
-                "<img alt=\"avatar\" src=\"" + invitingPicture + "\" style=\"border-radius: 100%; width: 120px; height: 120px; border: 4px solid #00E90E;\"/>\n" +
-                "<p style=\"font-size: 1.1rem;\">" + invitingUsername + "</p>\n" +
-                "</div>\n" +
-                "</div>\n" +
-                "</div></div>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</tbody>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</tbody>\n" +
-                "</table>\n" +
-                "<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"row row-2\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;\" width=\"100%\">\n" +
-                "<tbody>\n" +
-                "<tr>\n" +
-                "<td>\n" +
-                "<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"row-content stack\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fff; color: #000; width: 500px; margin: 0 auto;\" width=\"500\">\n" +
-                "<tbody>\n" +
-                "<tr>\n" +
-                "<td class=\"column column-1\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;\" width=\"100%\">\n" +
-                "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"icons_block block-1\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\" width=\"100%\">\n" +
-                "<tr>\n" +
-                "<td class=\"pad\" style=\"vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;\">\n" +
-                "<table cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt;\" width=\"100%\">\n" +
-                "<tr>\n" +
-                "<td class=\"alignment\" style=\"vertical-align: middle; text-align: center;\"><!--[if vml]><table align=\"left\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;\"><![endif]-->\n" +
-                "<!--[if !vml]><!-->\n" +
-                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"icons-inner\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; margin-right: -4px; padding-left: 0px; padding-right: 0px;\"><!--<![endif]-->\n" +
-                "<tr>\n" +
-                "<td style=\"vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;\"><a href=\"http://designedwithbeefree.com/\" style=\"text-decoration: none;\" target=\"_blank\"><img align=\"center\" alt=\"Beefree Logo\" class=\"icon\" height=\"32\" src=\"images/Beefree-logo.png\" style=\"display: block; height: auto; margin: 0 auto; border: 0;\" width=\"34\"/></a></td>\n" +
-                "<td style=\"font-family: 'Inter', sans-serif; font-size: 15px; color: #1e0e4b; vertical-align: middle; letter-spacing: undefined; text-align: center;\"><a href=\"http://designedwithbeefree.com/\" style=\"color: #1e0e4b; text-decoration: none;\" target=\"_blank\">Designed with Beefree</a></td>\n" +
-                "</tr>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</tbody>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</tbody>\n" +
-                "</table>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "</tbody>\n" +
-                "</table><!-- End -->\n" +
+                "\n" +
+                "<body class=\"clean-body u_body\" style=\"margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #ffffff;color: #000000\">\n" +
+                "  <!--[if IE]><div class=\"ie-container\"><![endif]-->\n" +
+                "  <!--[if mso]><div class=\"mso-container\"><![endif]-->\n" +
+                "  <table style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%\" cellpadding=\"0\" cellspacing=\"0\">\n" +
+                "    <tbody>\n" +
+                "      <tr style=\"vertical-align: top\">\n" +
+                "        <td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top\">\n" +
+                "          <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td align=\"center\" style=\"background-color: #ffffff;\"><![endif]-->\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "          <div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "            <div class=\"u-row\" style=\"margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "              <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "                <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:500px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "\n" +
+                "                <!--[if (mso)|(IE)]><td align=\"center\" width=\"500\" style=\"width: 500px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "                <div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 500px;display: table-cell;vertical-align: top;\">\n" +
+                "                  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "                    <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    <div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "\n" +
+                "                      <table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "                        <tbody>\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "\n" +
+                "                              <h1 style=\"margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 22px; font-weight: 700;\">" + inviterUsername + " has sent you a connection invitation</h1>\n" +
+                "\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </tbody>\n" +
+                "                      </table>\n" +
+                "\n" +
+                "                      <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    </div><!--<![endif]-->\n" +
+                "                  </div>\n" +
+                "                </div>\n" +
+                "                <!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "                <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "              </div>\n" +
+                "            </div>\n" +
+                "          </div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "          <div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "            <div class=\"u-row\" style=\"margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "              <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "                <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:500px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "\n" +
+                "                <!--[if (mso)|(IE)]><td align=\"center\" width=\"166\" style=\"width: 166px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\" valign=\"top\"><![endif]-->\n" +
+                "                <div class=\"u-col u-col-33p33\" style=\"max-width: 320px;min-width: 166.67px;display: table-cell;vertical-align: top;\">\n" +
+                "                  <div style=\"height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n" +
+                "                    <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    <div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\"><!--<![endif]-->\n" +
+                "\n" +
+                "                      <table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "                        <tbody>\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px 0px 0px 22px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "\n" +
+                "                              <div>\n" +
+                "                                <table>\n" +
+                "                                  <tbody>\n" +
+                "                                    <tr>\n" +
+                "                                      <td>\n" +
+                "                                        <img alt=\"inviterPicture\" src=\"" + inviterPicture + "\" style=\"width: 140px; height: 140px; border-radius: 100%; border: 4px solid #F1C40F;\">\n" +
+                "                                      </td>\n" +
+                "                                      <td>\n" +
+                "                                      </td>\n" +
+                "                                    </tr>\n" +
+                "                                    <tr>\n" +
+                "                                      <td style=\"text-align: center; font-weight: 600; font-size: 1.2rem\">\n" +
+                "                                        " + inviterUsername + "\n" +
+                "                                      </td>\n" +
+                "                                    </tr>\n" +
+                "                                  </tbody>\n" +
+                "                                </table>\n" +
+                "\n" +
+                "                              </div>\n" +
+                "\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </tbody>\n" +
+                "                      </table>\n" +
+                "\n" +
+                "                      <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    </div><!--<![endif]-->\n" +
+                "                  </div>\n" +
+                "                </div>\n" +
+                "                <!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "                <!--[if (mso)|(IE)]><td align=\"center\" width=\"166\" style=\"width: 166px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\" valign=\"top\"><![endif]-->\n" +
+                "                <div class=\"u-col u-col-33p33\" style=\"max-width: 320px;min-width: 166.67px;display: table-cell;vertical-align: top;\">\n" +
+                "                  <div style=\"height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n" +
+                "                    <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    <div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\"><!--<![endif]-->\n" +
+                "\n" +
+                "                      <table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "                        <tbody>\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"overflow-wrap:break-word;word-break:break-word;padding:66px 0px 0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "\n" +
+                "                              <table height=\"0px\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;border-top: 5px solid #f1c40f;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%\">\n" +
+                "                                <tbody>\n" +
+                "                                  <tr style=\"vertical-align: top\">\n" +
+                "                                    <td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top;font-size: 0px;line-height: 0px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%\">\n" +
+                "                                      <span>&#160;</span>\n" +
+                "                                    </td>\n" +
+                "                                  </tr>\n" +
+                "                                </tbody>\n" +
+                "                              </table>\n" +
+                "\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </tbody>\n" +
+                "                      </table>\n" +
+                "\n" +
+                "                      <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    </div><!--<![endif]-->\n" +
+                "                  </div>\n" +
+                "                </div>\n" +
+                "                <!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "                <!--[if (mso)|(IE)]><td align=\"center\" width=\"166\" style=\"width: 166px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\" valign=\"top\"><![endif]-->\n" +
+                "                <div class=\"u-col u-col-33p33\" style=\"max-width: 320px;min-width: 166.67px;display: table-cell;vertical-align: top;\">\n" +
+                "                  <div style=\"height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\">\n" +
+                "                    <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    <div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;\"><!--<![endif]-->\n" +
+                "\n" +
+                "                      <table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "                        <tbody>\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "\n" +
+                "                              <div>\n" +
+                "                                <table>\n" +
+                "                                  <tbody>\n" +
+                "                                    <tr>\n" +
+                "                                      <td>\n" +
+                "                                        <img alt=\"invitingPicture\" src=\"" + invitingPicture + "\" style=\"width: 140px; height: 140px; border-radius: 100%; border: 4px solid #2DC26B;\">\n" +
+                "                                      </td>\n" +
+                "                                      <td>\n" +
+                "                                      </td>\n" +
+                "                                    </tr>\n" +
+                "                                    <tr>\n" +
+                "                                      <td>\n" +
+                "                                        <p style=\"text-align: center; font-weight: 600; margin-right: 3px; font-size: 1.2rem\">" + invitingUsername + "\n" +
+                "                                        </p>\n" +
+                "                                      </td>\n" +
+                "                                    </tr>\n" +
+                "                                  </tbody>\n" +
+                "                                </table>\n" +
+                "                                <table></table>\n" +
+                "                              </div>\n" +
+                "\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </tbody>\n" +
+                "                      </table>\n" +
+                "\n" +
+                "                      <!--[if (!mso)&(!IE)]><!-->\n" +
+                "                    </div><!--<![endif]-->\n" +
+                "                  </div>\n" +
+                "                </div>\n" +
+                "                <!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "                <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "              </div>\n" +
+                "            </div>\n" +
+                "          </div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "          <!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+                "        </td>\n" +
+                "      </tr>\n" +
+                "    </tbody>\n" +
+                "  </table>\n" +
+                "  <!--[if mso]></div><![endif]-->\n" +
+                "  <!--[if IE]></div><![endif]-->\n" +
                 "</body>\n" +
+                "\n" +
                 "</html>";
     }
 }
