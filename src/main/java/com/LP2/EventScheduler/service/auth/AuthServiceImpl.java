@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         var savedUser = userRepository.save(user);
+        System.out.println("User ID: " + savedUser.getId());
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
