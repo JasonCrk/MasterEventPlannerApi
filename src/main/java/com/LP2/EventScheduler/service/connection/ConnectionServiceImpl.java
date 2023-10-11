@@ -55,7 +55,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         emailData.put("inviterPicture", authUser.getAccount().getPicture());
         emailData.put("inviterUsername", authUser.getUserName());
         emailData.put("invitingPicture", inviting.getAccount().getPicture());
-        emailData.put("invitingUsername", authUser.getUserName());
+        emailData.put("invitingUsername", inviting.getUserName());
 
         try {
             this.emailService.sendEmail(inviting.getEmail(), new ReceivedInvitationEmail(), emailData);
