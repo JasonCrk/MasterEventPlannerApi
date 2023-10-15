@@ -58,7 +58,7 @@ public class SearchEventsRepositoryTest {
         secondTestCategory.setIcon(this.faker.internet().avatar());
         secondTestCategory.setName("Test category 2");
 
-        Category savedCategory = this.categoryRepository.save(firstTestCategory);
+        Category firstSavedCategory = this.categoryRepository.save(firstTestCategory);
         this.secondCategory = this.categoryRepository.save(secondTestCategory);
 
         Account testAccount = new Account();
@@ -72,29 +72,35 @@ public class SearchEventsRepositoryTest {
                 .build();
         User savedUser = this.userRepository.save(testUser);
 
-        Event testEvent1 = new Event();
-        testEvent1.setName("Test event 1");
-        testEvent1.setCoordinator(savedUser);
-        testEvent1.setCategory(savedCategory);
-        testEvent1.setVisibility(Visibility.PUBLIC);
-        testEvent1.setLocal(this.faker.address().streetAddress());
-        testEvent1.setRealizationDate(LocalDateTime.now().plusDays(3));
+        Event testEvent1 = Event.builder()
+                .name("Test event 1")
+                .coordinator(savedUser)
+                .category(firstSavedCategory)
+                .visibility(Visibility.PUBLIC)
+                .local(this.faker.address().streetAddress())
+                .realizationDate(LocalDateTime.now().plusDays(1))
+                .createdAt(LocalDateTime.now().plusMinutes(1))
+                .build();
 
-        Event testEvent2 = new Event();
-        testEvent2.setName("Test event 2");
-        testEvent2.setCoordinator(savedUser);
-        testEvent2.setCategory(this.secondCategory);
-        testEvent2.setVisibility(Visibility.PUBLIC);
-        testEvent2.setLocal(this.faker.address().streetAddress());
-        testEvent2.setRealizationDate(LocalDateTime.now().plusDays(2));
+        Event testEvent2 = Event.builder()
+                .name("Test event 2")
+                .coordinator(savedUser)
+                .category(this.secondCategory)
+                .visibility(Visibility.PUBLIC)
+                .local(this.faker.address().streetAddress())
+                .realizationDate(LocalDateTime.now().plusDays(2))
+                .createdAt(LocalDateTime.now().plusMinutes(2))
+                .build();
 
-        Event testEvent3 = new Event();
-        testEvent3.setName("Test event 3");
-        testEvent3.setCoordinator(savedUser);
-        testEvent3.setCategory(savedCategory);
-        testEvent3.setVisibility(Visibility.ONLY_CONNECTIONS);
-        testEvent3.setLocal(this.faker.address().streetAddress());
-        testEvent3.setRealizationDate(LocalDateTime.now().plusDays(1));
+        Event testEvent3 = Event.builder()
+                .name("Test event 3")
+                .coordinator(savedUser)
+                .category(firstSavedCategory)
+                .visibility(Visibility.ONLY_CONNECTIONS)
+                .local(this.faker.address().streetAddress())
+                .realizationDate(LocalDateTime.now().plusDays(3))
+                .createdAt(LocalDateTime.now().plusMinutes(3))
+                .build();
 
         this.event1 = this.eventRepository.save(testEvent1);
         this.event2 = this.eventRepository.save(testEvent2);
@@ -212,10 +218,13 @@ public class SearchEventsRepositoryTest {
                 null,
                 null
         );
+        filteredEvents.forEach(event -> {
+            System.out.println(event.getCreatedAt() + " " + event.getName());
+        });
 
-        Assertions.assertEquals(this.event1.getId(), filteredEvents.get(0).getId());
+        Assertions.assertEquals(this.privateEvent3.getId(), filteredEvents.get(0).getId());
         Assertions.assertEquals(this.event2.getId(), filteredEvents.get(1).getId());
-        Assertions.assertEquals(this.privateEvent3.getId(), filteredEvents.get(2).getId());
+        Assertions.assertEquals(this.event1.getId(), filteredEvents.get(2).getId());
     }
 
     @Test
@@ -228,9 +237,9 @@ public class SearchEventsRepositoryTest {
                 null
         );
 
-        Assertions.assertEquals(this.event1.getId(), filteredEvents.get(0).getId());
+        Assertions.assertEquals(this.privateEvent3.getId(), filteredEvents.get(0).getId());
         Assertions.assertEquals(this.event2.getId(), filteredEvents.get(1).getId());
-        Assertions.assertEquals(this.privateEvent3.getId(), filteredEvents.get(2).getId());
+        Assertions.assertEquals(this.event1.getId(), filteredEvents.get(2).getId());
     }
 
     @Test
@@ -243,9 +252,9 @@ public class SearchEventsRepositoryTest {
                 null
         );
 
-        Assertions.assertEquals(this.privateEvent3.getId(), filteredEvents.get(2).getId());
+        Assertions.assertEquals(this.event1.getId(), filteredEvents.get(2).getId());
         Assertions.assertEquals(this.event2.getId(), filteredEvents.get(1).getId());
-        Assertions.assertEquals(this.event1.getId(), filteredEvents.get(0).getId());
+        Assertions.assertEquals(this.privateEvent3.getId(), filteredEvents.get(0).getId());
     }
 
     @Test
@@ -255,7 +264,7 @@ public class SearchEventsRepositoryTest {
                 this.testQuery,
                 null,
                 null,
-                secondCategory
+                this.secondCategory
         );
 
         Assertions.assertTrue(filteredEvents.stream().anyMatch(

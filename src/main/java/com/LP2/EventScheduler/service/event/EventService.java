@@ -18,6 +18,11 @@ public interface EventService {
             EventSortingOptions sortBy,
             String categoryName
     );
+    ListResponse<EventItem> searchForEventsYouParticipateIn(
+            EventSortingOptions sortBy,
+            String categoryName,
+            User authUser
+    );
     EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user);
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);
     MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user);

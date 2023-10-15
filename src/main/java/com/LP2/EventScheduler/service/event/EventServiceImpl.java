@@ -65,6 +65,26 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public ListResponse<EventItem> searchForEventsYouParticipateIn(
+            EventSortingOptions sortBy,
+            String categoryName,
+            User authUser
+    ) {
+        Category category = null;
+
+        if (categoryName != null)
+            category = this.categoryRepository
+                    .findByName(categoryName)
+                    .orElseThrow(CategoryNotFoundException::new);
+
+        List<Event> events = this.eventRepository.searchEventsCreatedAndParticipating(sortBy, category, authUser);
+
+        List<EventItem> mappedEvents = EventMapper.INSTANCE.toList(events);
+
+        return new ListResponse<>(mappedEvents);
+    }
+
+    @Override
     public EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user) {
         Category category = this.categoryRepository
                 .findById(eventData.getCategory())
@@ -101,7 +121,7 @@ public class EventServiceImpl implements EventService {
                     scheduleNotificationsJobDetail,
                     "schedule-notifications-trigger",
                     "trigger to schedule notifications",
-                    CronScheduleBuilder.cronSchedule(minuteOfRealizationDateOfEvent + " " + hourOfRealizationDateOfEvent + " * * * ?")
+                    CronScheduleBuilder.cronSchedule(String.format("0 %s %s * * ?", minuteOfRealizationDateOfEvent, hourOfRealizationDateOfEvent))
             );
 
             this.scheduler.scheduleJob(scheduleNotificationsJobDetail, scheduleNotificationsTrigger);
