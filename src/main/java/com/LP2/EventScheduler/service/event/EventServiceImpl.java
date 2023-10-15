@@ -121,7 +121,7 @@ public class EventServiceImpl implements EventService {
                     scheduleNotificationsJobDetail,
                     "schedule-notifications-trigger",
                     "trigger to schedule notifications",
-                    CronScheduleBuilder.cronSchedule(minuteOfRealizationDateOfEvent + " " + hourOfRealizationDateOfEvent + " * * * ?")
+                    CronScheduleBuilder.cronSchedule(String.format("0 %s %s * * ?", minuteOfRealizationDateOfEvent, hourOfRealizationDateOfEvent))
             );
 
             this.scheduler.scheduleJob(scheduleNotificationsJobDetail, scheduleNotificationsTrigger);
