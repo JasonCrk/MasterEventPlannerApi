@@ -39,9 +39,9 @@ public class SearchEventsRepositoryImpl implements SearchEventsRepository {
 
         Order orderBy = null;
         if (sortBy == null) {
-            orderBy = cb.asc(eventRoot.get("createdAt"));
+            orderBy = cb.desc(eventRoot.get("createdAt"));
         } else if (sortBy.name().equals(EventSortingOptions.RECENT.name())) {
-            orderBy = cb.asc(eventRoot.get("createdAt"));
+            orderBy = cb.desc(eventRoot.get("createdAt"));
         } else if (sortBy.name().equals(EventSortingOptions.UPCOMING.name())) {
             orderBy = cb.desc(eventRoot.get("realizationDate"));
         }
