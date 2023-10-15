@@ -39,6 +39,18 @@ public class EventController {
         );
     }
 
+    @GetMapping(path = "/participating")
+    public ResponseEntity<ListResponse<EventItem>> searchForEventsYouParticipateIn(
+            @RequestParam(required = false) EventSortingOptions sortBy,
+            @RequestParam(required = false, name = "category") String categoryName,
+            @RequestAttribute("user") User authUser
+    ) {
+        return new ResponseEntity<>(
+                this.eventService.searchForEventsYouParticipateIn(sortBy, categoryName, authUser),
+                HttpStatus.OK
+        );
+    }
+
     @PostMapping
     public ResponseEntity<EntityWithMessageResponse<EventItem>> scheduleEvent(
             @Valid @RequestBody CreateEventDTO eventData,
