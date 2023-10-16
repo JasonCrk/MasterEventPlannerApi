@@ -8,6 +8,7 @@ import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
+import com.LP2.EventScheduler.response.event.EventDetails;
 import com.LP2.EventScheduler.response.event.EventItem;
 
 import java.util.UUID;
@@ -23,6 +24,7 @@ public interface EventService {
             String categoryName,
             User authUser
     );
+    EventDetails getEventDetails(UUID eventId, User authUser);
     EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user);
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);
     MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user);
