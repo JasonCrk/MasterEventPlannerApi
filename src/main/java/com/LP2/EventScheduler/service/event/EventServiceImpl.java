@@ -18,6 +18,7 @@ import com.LP2.EventScheduler.repository.ParticipationRepository;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
+import com.LP2.EventScheduler.response.event.EventDetails;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.response.event.EventMapper;
 import com.LP2.EventScheduler.scheduler.SchedulerService;
@@ -82,6 +83,21 @@ public class EventServiceImpl implements EventService {
         List<EventItem> mappedEvents = EventMapper.INSTANCE.toList(events);
 
         return new ListResponse<>(mappedEvents);
+    }
+
+    @Override
+    public EventDetails getEventDetails(UUID eventId, User authUser) {
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+
+        if (event.getVisibility().equals(Visibility.ONLY_CONNECTIONS)) {
+            boolean usersConnectionExist = this.connectionRepository.existsConnectionBetweenUsers(event.getCoordinator(), authUser);
+            if (!usersConnectionExist)
+                throw new ConnectionNotFoundException("The event is only for connections");
+        }
+
+        return EventMapper.INSTANCE.toDetail(event);
     }
 
     @Override

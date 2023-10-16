@@ -51,6 +51,14 @@ public class EventController {
         );
     }
 
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<?> getEventDetails(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User authUser
+    ) {
+        return new ResponseEntity<>(this.eventService.getEventDetails(eventId, authUser), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<EntityWithMessageResponse<EventItem>> scheduleEvent(
             @Valid @RequestBody CreateEventDTO eventData,

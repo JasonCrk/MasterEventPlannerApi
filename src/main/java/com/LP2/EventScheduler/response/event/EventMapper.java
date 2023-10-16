@@ -28,4 +28,12 @@ public interface EventMapper {
             target = "realizationDate"
     )
     EventItem toResponse(Event event);
+
+    @Mapping(source = "coordinator.account.picture", target = "coordinator.picture")
+    @Mapping(expression = "java(event.getCreatedAt() == null ? null : event.getCreatedAt().toString())", target = "createdAt")
+    @Mapping(
+            expression = "java(event.getRealizationDate() == null ? null : event.getRealizationDate().toString())",
+            target = "realizationDate"
+    )
+    EventDetails toDetail(Event event);
 }
