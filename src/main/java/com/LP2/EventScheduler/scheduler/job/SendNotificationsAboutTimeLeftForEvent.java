@@ -1,14 +1,16 @@
 package com.LP2.EventScheduler.scheduler.job;
 
-import com.LP2.EventScheduler.exception.EventNotFoundException;
-import com.LP2.EventScheduler.exception.FailedNotificationSendingException;
 import com.LP2.EventScheduler.firebase.FirebaseCloudMessagingService;
 import com.LP2.EventScheduler.firebase.NotificationMessage;
 import com.LP2.EventScheduler.model.Event;
 import com.LP2.EventScheduler.model.Participation;
+import com.LP2.EventScheduler.model.enums.EventStatus;
 import com.LP2.EventScheduler.repository.EventRepository;
+import com.LP2.EventScheduler.repository.ParticipationRepository;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+
+import jakarta.transaction.Transactional;
 
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -17,6 +19,8 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
@@ -25,8 +29,12 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
     private EventRepository eventRepository;
 
     @Autowired
+    private ParticipationRepository participationRepository;
+
+    @Autowired
     private FirebaseCloudMessagingService messagingService;
 
+    @Transactional
     @Override
     protected void executeInternal(JobExecutionContext context) {
         JobDataMap data = context.getMergedJobDataMap();
@@ -35,7 +43,9 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
 
         Event event = this.eventRepository
                 .findById(eventId)
-                .orElseThrow(EventNotFoundException::new);
+                .orElse(null);
+
+        if (event == null) return;
 
         LocalDateTime eventRealizationDate = LocalDateTime.parse(data.getString("eventRealizationDate"));
         LocalDateTime currentTime = LocalDateTime.now();
@@ -44,6 +54,9 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
 
         if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 0L) {
             notificationMessage = "It's time for the \"" + event.getName() +  "\" event";
+
+            event.setStatus(EventStatus.IN_PROGRESS);
+            this.eventRepository.save(event);
         } else if (ChronoUnit.DAYS.between(currentTime, eventRealizationDate) == 1L) {
             notificationMessage += "24 hours";
         } else if (ChronoUnit.WEEKS.between(currentTime, eventRealizationDate) == 1L) {
@@ -55,16 +68,19 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
         } else
             return;
 
-        for (Participation participation : event.getParticipants()) {
+        List<Participation> eventParticipations = this.participationRepository.findByEvent(event);
+
+        for (Participation participation : eventParticipations) {
             try {
                 NotificationMessage notification = new NotificationMessage();
                 notification.setTitle("Master Event Planner");
                 notification.setMessage(notificationMessage);
                 notification.setRecipientToken(participation.getToken());
+                notification.setData(new HashMap<>());
 
                 this.messagingService.sendNotificationByToken(notification);
             } catch (FirebaseMessagingException e) {
-                throw new FailedNotificationSendingException();
+                System.out.println("Ha ocurrido un fallo en el envío de notificaciones");
             }
         }
     }
