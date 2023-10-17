@@ -33,4 +33,7 @@ public class UpdateEventDTO {
 
     @Future(message = "Must be a time greater than the current one")
     private LocalDateTime realizationDate;
+
+    @Future(message = "Must be a time greater than the current one")
+    private LocalDateTime finishDate;
 }

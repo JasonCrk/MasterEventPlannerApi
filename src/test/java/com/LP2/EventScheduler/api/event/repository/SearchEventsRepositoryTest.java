@@ -80,6 +80,7 @@ public class SearchEventsRepositoryTest {
                 .local(this.faker.address().streetAddress())
                 .realizationDate(LocalDateTime.now().plusDays(1))
                 .createdAt(LocalDateTime.now().plusMinutes(1))
+                .finishDate(LocalDateTime.now().plusDays(2))
                 .build();
 
         Event testEvent2 = Event.builder()
@@ -90,6 +91,7 @@ public class SearchEventsRepositoryTest {
                 .local(this.faker.address().streetAddress())
                 .realizationDate(LocalDateTime.now().plusDays(2))
                 .createdAt(LocalDateTime.now().plusMinutes(2))
+                .finishDate(LocalDateTime.now().plusDays(3))
                 .build();
 
         Event testEvent3 = Event.builder()
@@ -100,6 +102,7 @@ public class SearchEventsRepositoryTest {
                 .local(this.faker.address().streetAddress())
                 .realizationDate(LocalDateTime.now().plusDays(3))
                 .createdAt(LocalDateTime.now().plusMinutes(3))
+                .finishDate(LocalDateTime.now().plusDays(4))
                 .build();
 
         this.event1 = this.eventRepository.save(testEvent1);

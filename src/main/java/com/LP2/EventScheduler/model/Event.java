@@ -56,6 +56,9 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime realizationDate;
 
+    @Column(nullable = false)
+    private LocalDateTime finishDate;
+
     @CreatedDate
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();

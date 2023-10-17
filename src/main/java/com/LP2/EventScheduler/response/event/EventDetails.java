@@ -20,6 +20,7 @@ public class EventDetails {
     private String visibility;
     private String status;
     private String realizationDate;
+    private String finishDate;
     private CategoryResponse category;
     private String createdAt;
     private String local;

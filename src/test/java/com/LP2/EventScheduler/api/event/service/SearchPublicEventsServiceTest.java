@@ -62,6 +62,7 @@ public class SearchPublicEventsServiceTest {
                 .realizationDate(LocalDateTime.now().plusDays(1))
                 .createdAt(LocalDateTime.now())
                 .visibility(Visibility.PUBLIC)
+                .finishDate(LocalDateTime.now().plusDays(2))
                 .build();
 
         this.concertCategory = Category.builder()
@@ -76,6 +77,7 @@ public class SearchPublicEventsServiceTest {
                 .realizationDate(LocalDateTime.now().plusDays(2))
                 .createdAt(LocalDateTime.now())
                 .visibility(Visibility.PUBLIC)
+                .finishDate(LocalDateTime.now().plusDays(3))
                 .build();
     }
 

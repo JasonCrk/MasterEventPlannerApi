@@ -31,6 +31,7 @@ public interface EventMapper {
 
     @Mapping(source = "coordinator.account.picture", target = "coordinator.picture")
     @Mapping(expression = "java(event.getCreatedAt() == null ? null : event.getCreatedAt().toString())", target = "createdAt")
+    @Mapping(expression = "java(event.getFinishDate() == null ? null : event.getFinishDate().toString())", target = "finishDate")
     @Mapping(
             expression = "java(event.getRealizationDate() == null ? null : event.getRealizationDate().toString())",
             target = "realizationDate"

@@ -114,6 +114,7 @@ public class EventServiceImpl implements EventService {
                 .category(category)
                 .coordinator(user)
                 .visibility(eventData.getVisibility())
+                .finishDate(eventData.getFinishDate())
                 .build();
 
         Event savedEvent = this.eventRepository.save(newEvent);
@@ -214,6 +215,9 @@ public class EventServiceImpl implements EventService {
 
         if (eventData.getRealizationDate() != null)
             event.setRealizationDate(eventData.getRealizationDate());
+
+        if (eventData.getFinishDate() != null)
+            event.setFinishDate(eventData.getFinishDate());
 
         if (eventData.getLocal() != null)
             event.setLocal(eventData.getLocal());
