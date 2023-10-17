@@ -91,7 +91,9 @@ public class EventServiceImpl implements EventService {
                 .findById(eventId)
                 .orElseThrow(EventNotFoundException::new);
 
-        if (event.getVisibility().equals(Visibility.ONLY_CONNECTIONS)) {
+        boolean isEventOwner = event.getCoordinator().getId().equals(authUser.getId());
+
+        if (event.getVisibility().equals(Visibility.ONLY_CONNECTIONS) && !isEventOwner) {
             boolean usersConnectionExist = this.connectionRepository.existsConnectionBetweenUsers(event.getCoordinator(), authUser);
             if (!usersConnectionExist)
                 throw new ConnectionNotFoundException("The event is only for connections");
