@@ -1,4 +1,4 @@
-package com.LP2.EventScheduler.exception;
+package com.LP2.EventScheduler.response;
 
 import lombok.Data;
 
