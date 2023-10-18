@@ -21,17 +21,23 @@ import java.util.UUID;
 @Service
 public class FirebaseStorageService {
 
-    @Autowired
+    @Autowired(required = false)
     private Storage storage;
 
     @Autowired
     private FileUtils fileUtils;
 
+    @Value("${firebase.enabled}")
+    private boolean firebaseEnabled;
+
     @Value("${firebase.cloud-storage.bucket-name}")
     private String bucketName;
 
     public String uploadImage(MultipartFile multipartFile) throws IOException {
+        if (!firebaseEnabled) return null;
+
         final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/" + this.bucketName + "/o/%s?alt=media";
+
         String fileName = multipartFile.getOriginalFilename();
         String extensionFile = this.fileUtils.getExtensionFile(fileName);
 
