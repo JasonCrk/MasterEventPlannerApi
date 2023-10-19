@@ -46,7 +46,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
         account.setAbout(accountData.getAbout());
-        account.setLocation(accountData.getLocation());
 
         this.accountRepository.save(account);
 

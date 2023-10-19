@@ -21,7 +21,5 @@ public class UpdateAccountDTO {
     @IsImage
     private MultipartFile banner;
 
-    private String location;
-
     private String about;
 }
