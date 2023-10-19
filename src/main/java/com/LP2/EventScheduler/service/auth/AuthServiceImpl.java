@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse register(RegisterDTO registerData) {
         var account = new Account();
 
-        this.accountRepository.save(account);
+        var savedAccount = this.accountRepository.save(account);
 
         var user = User.builder()
                 .userName(registerData.getUsername())
@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         var savedUser = userRepository.save(user);
-        System.out.println("User ID: " + savedUser.getId());
+        System.out.println("User ID: " + savedUser.getId() + " & Account ID: " + savedAccount.getId());
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
