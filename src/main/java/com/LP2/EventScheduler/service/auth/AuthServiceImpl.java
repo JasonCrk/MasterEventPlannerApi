@@ -13,6 +13,8 @@ import com.LP2.EventScheduler.repository.AccountRepository;
 import com.LP2.EventScheduler.repository.TokenRepository;
 import com.LP2.EventScheduler.repository.UserRepository;
 import com.LP2.EventScheduler.response.auth.JwtResponse;
+import com.LP2.EventScheduler.response.user.SimpleUserResponse;
+import com.LP2.EventScheduler.response.user.UserMapper;
 import com.LP2.EventScheduler.security.JwtService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +39,11 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public SimpleUserResponse retrieveUserByToken(User authUser) {
+        return UserMapper.INSTANCE.toSimpleResponse(authUser);
+    }
 
     @Override
     public JwtResponse register(RegisterDTO registerData) {
