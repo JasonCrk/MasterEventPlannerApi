@@ -76,6 +76,14 @@ public class EventController {
         return new ResponseEntity<>(this.eventService.joinEvent(eventId, joinData, user), HttpStatus.CREATED);
     }
 
+    @PostMapping(path = "/{eventId}/cancel")
+    public ResponseEntity<MessageResponse> cancelEvent(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.eventService.cancelEvent(eventId, authUser));
+    }
+
     @PatchMapping(path = "/{eventId}")
     public ResponseEntity<MessageResponse> updateEvent(
             @PathVariable("eventId") UUID eventId,
