@@ -225,4 +225,16 @@ public class ApiExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FailedEventSchedulerRemovedException.class)
+    public ResponseEntity<ErrorResponse> handlerFailedEventSchedulerRemovedException(
+            FailedEventSchedulerRemovedException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -27,5 +27,6 @@ public interface EventService {
     EventDetails getEventDetails(UUID eventId, User authUser);
     EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user);
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);
+    MessageResponse cancelEvent(UUID eventId, User authUser);
     MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user);
 }

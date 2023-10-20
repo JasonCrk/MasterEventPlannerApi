@@ -3,6 +3,8 @@ package com.LP2.EventScheduler.service.event;
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
 import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
+import com.LP2.EventScheduler.email.EmailService;
+import com.LP2.EventScheduler.email.mails.EventCanceledEmail;
 import com.LP2.EventScheduler.exception.*;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.Category;
@@ -24,14 +26,15 @@ import com.LP2.EventScheduler.response.event.EventMapper;
 import com.LP2.EventScheduler.scheduler.SchedulerService;
 import com.LP2.EventScheduler.scheduler.job.SendNotificationsAboutTimeLeftForEvent;
 
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
 import org.quartz.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,7 @@ public class EventServiceImpl implements EventService {
 
     private final Scheduler scheduler;
     private final SchedulerService schedulerService;
+    private final EmailService emailService;
 
     @Override
     public ListResponse<EventItem> searchPublicEvents(
@@ -133,14 +137,17 @@ public class EventServiceImpl implements EventService {
             JobDetail scheduleNotificationsJobDetail = this.schedulerService.buildJobDetail(
                     new SendNotificationsAboutTimeLeftForEvent(),
                     jobData,
+                    savedEvent.getId().toString(),
                     "job detail to schedule notifications",
-                    "schedule-notifications-job"
+                    "schedule-notifications"
             );
             Trigger scheduleNotificationsTrigger = this.schedulerService.buildTriggerWithCronSchedule(
                     scheduleNotificationsJobDetail,
-                    "schedule-notifications-trigger",
+                    "schedule-notifications",
                     "trigger to schedule notifications",
-                    CronScheduleBuilder.cronSchedule(String.format("0 %s %s * * ?", minuteOfRealizationDateOfEvent, hourOfRealizationDateOfEvent))
+                    CronScheduleBuilder.cronSchedule(String.format("0 %s %s * * ?",
+                            minuteOfRealizationDateOfEvent,
+                            hourOfRealizationDateOfEvent))
             );
 
             this.scheduler.scheduleJob(scheduleNotificationsJobDetail, scheduleNotificationsTrigger);
@@ -191,6 +198,58 @@ public class EventServiceImpl implements EventService {
         this.participationRepository.save(userParticipation);
 
         return new MessageResponse("Participation added");
+    }
+
+    @Transactional
+    @Override
+    public MessageResponse cancelEvent(UUID eventId, User authUser) {
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+
+        if (!event.getCoordinator().getId().equals(authUser.getId()))
+            throw new IsNotOwnerException("You are not the coordinator of this event");
+
+        if (!event.getStatus().equals(EventStatus.PENDING))
+            throw new UnexpectedResourceValueException("The event must be in a pending state");
+
+        event.setStatus(EventStatus.CANCELLED);
+        this.eventRepository.save(event);
+
+        JobKey eventJob = JobKey.jobKey(
+                event.getId().toString(),
+                "schedule-notifications"
+        );
+
+        try {
+            boolean isEventSchedulerRemoved = this.scheduler.deleteJob(eventJob);
+
+            if (!isEventSchedulerRemoved)
+                throw new FailedEventSchedulerRemovedException();
+        } catch (SchedulerException e) {
+            throw new FailedEventSchedulerRemovedException();
+        }
+
+        List<Participation> participations = event.getParticipants();
+
+        // NOTA: Esto se podría hacer de forma asíncrona
+        for (Participation participation : participations) {
+            Map<String, String> emailData = new HashMap<>();
+            emailData.put("coordinatorUsername", participation.getUser().getUserName());
+            emailData.put("eventName", event.getName());
+
+            try {
+                this.emailService.sendEmail(
+                        participation.getUser().getEmail(),
+                        new EventCanceledEmail(),
+                        emailData
+                );
+            } catch (MessagingException e) {
+                throw new FailedEmailSendingException();
+            }
+        }
+
+        return new MessageResponse("The event has been canceled");
     }
 
     @Override
