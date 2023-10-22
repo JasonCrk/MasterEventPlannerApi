@@ -3,6 +3,7 @@ package com.LP2.EventScheduler.repository.custom;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.Category;
 import com.LP2.EventScheduler.model.Event;
+import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.model.enums.Visibility;
 
 import java.util.List;
@@ -14,4 +15,9 @@ public interface SearchEventsRepository {
             Visibility visibility,
             Category category
     ) throws IllegalArgumentException;
+    List<Event> searchEventsCreatedAndParticipating(
+            EventSortingOptions sortBy,
+            Category category,
+            User user
+    );
 }

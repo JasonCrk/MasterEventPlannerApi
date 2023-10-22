@@ -25,7 +25,6 @@ public class Account {
 
     private String picture;
     private String banner;
-    private String location;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     private User user;

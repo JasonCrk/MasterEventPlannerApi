@@ -40,4 +40,8 @@ public class CreateEventDTO {
     @NotNull(message = "The realization date is required")
     @Future(message = "Must be a time greater than the current one")
     private LocalDateTime realizationDate;
+
+    @NotNull(message = "The finish date is required")
+    @Future(message = "Must be a time greater than the current one")
+    private LocalDateTime finishDate;
 }

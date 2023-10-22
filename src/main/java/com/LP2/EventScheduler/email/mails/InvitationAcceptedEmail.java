@@ -4,11 +4,11 @@ import com.LP2.EventScheduler.email.EmailContent;
 
 import java.util.Map;
 
-public class ReceivedInvitationEmail implements EmailContent {
+public class InvitationAcceptedEmail implements EmailContent {
 
     @Override
     public String getSubject() {
-        return "New connection invitation received - Master Event Planner";
+        return "Invitation Accepted - Master Event Planner";
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ReceivedInvitationEmail implements EmailContent {
                 "                          <tr>\n" +
                 "                            <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
                 "\n" +
-                "                              <h1 style=\"margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 22px; font-weight: 700;\">" + inviterUsername + " has sent you a connection invitation</h1>\n" +
+                "                              <h1 style=\"margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 22px; font-weight: 700;\">" + invitingUsername + " has accepted your connection invitation!</h1>\n" +
                 "\n" +
                 "                            </td>\n" +
                 "                          </tr>\n" +
@@ -197,7 +197,7 @@ public class ReceivedInvitationEmail implements EmailContent {
                 "                                  <tbody>\n" +
                 "                                    <tr>\n" +
                 "                                      <td>\n" +
-                "                                        <img alt=\"inviterPicture\" src=\"" + inviterPicture + "\" style=\"width: 140px; height: 140px; border-radius: 100%; border: 4px solid #F1C40F;\">\n" +
+                "                                        <img alt=\"inviterPicture\" src=\"" + inviterPicture + "\" style=\"width: 140px; height: 140px; border-radius: 100%; border: 4px solid #2DC26B;\">\n" +
                 "                                      </td>\n" +
                 "                                      <td>\n" +
                 "                                      </td>\n" +
@@ -233,7 +233,7 @@ public class ReceivedInvitationEmail implements EmailContent {
                 "                          <tr>\n" +
                 "                            <td style=\"overflow-wrap:break-word;word-break:break-word;padding:66px 0px 0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
                 "\n" +
-                "                              <table height=\"0px\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;border-top: 5px solid #f1c40f;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%\">\n" +
+                "                              <table height=\"0px\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;border-top: 5px solid #2dc26b;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%\">\n" +
                 "                                <tbody>\n" +
                 "                                  <tr style=\"vertical-align: top\">\n" +
                 "                                    <td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top;font-size: 0px;line-height: 0px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%\">\n" +

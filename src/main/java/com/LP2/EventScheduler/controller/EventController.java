@@ -39,6 +39,26 @@ public class EventController {
         );
     }
 
+    @GetMapping(path = "/participating")
+    public ResponseEntity<ListResponse<EventItem>> searchForEventsYouParticipateIn(
+            @RequestParam(required = false) EventSortingOptions sortBy,
+            @RequestParam(required = false, name = "category") String categoryName,
+            @RequestAttribute("user") User authUser
+    ) {
+        return new ResponseEntity<>(
+                this.eventService.searchForEventsYouParticipateIn(sortBy, categoryName, authUser),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<?> getEventDetails(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User authUser
+    ) {
+        return new ResponseEntity<>(this.eventService.getEventDetails(eventId, authUser), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<EntityWithMessageResponse<EventItem>> scheduleEvent(
             @Valid @RequestBody CreateEventDTO eventData,
@@ -61,6 +81,14 @@ public class EventController {
             @RequestAttribute("user") User user
     ){
         return new ResponseEntity<>(this.eventService.removeEvent(eventId, user), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/{eventId}/cancel")
+    public ResponseEntity<MessageResponse> cancelEvent(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.eventService.cancelEvent(eventId, authUser));
     }
 
     @PatchMapping(path = "/{eventId}")

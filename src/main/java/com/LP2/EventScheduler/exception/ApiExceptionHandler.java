@@ -1,13 +1,38 @@
 package com.LP2.EventScheduler.exception;
 
+import com.LP2.EventScheduler.response.ErrorResponse;
+import com.LP2.EventScheduler.response.ErrorValidationResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorValidationResponse> handlerValidationException(
+            MethodArgumentNotValidException ex,
+            WebRequest request
+    ) {
+        ErrorValidationResponse errorResponse = new ErrorValidationResponse();
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        errorResponse.setErrors(errors);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlerCategoryNotFoundException(
@@ -156,6 +181,54 @@ public class ApiExceptionHandler {
     @ExceptionHandler(FailedEmailSendingException.class)
     public ResponseEntity<ErrorResponse> handlerFailedEmailSendingException(
             FailedEmailSendingException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvitationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerInvitationNotFoundException(
+            InvitationNotFoundException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FailedImageUploadException.class)
+    public ResponseEntity<ErrorResponse> handlerFailedImageUploadException(
+            FailedImageUploadException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerAccountNotFoundException(
+            AccountNotFoundException ex,
+            WebRequest request
+    ) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FailedEventSchedulerRemovedException.class)
+    public ResponseEntity<ErrorResponse> handlerFailedEventSchedulerRemovedException(
+            FailedEventSchedulerRemovedException ex,
             WebRequest request
     ) {
         ErrorResponse errorResponse = new ErrorResponse();

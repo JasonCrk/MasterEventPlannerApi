@@ -37,7 +37,9 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/api/auth/**"
+                                "/api/auth/login",
+                                "/api/auth/register",
+                                "/api/auth/refresh-token"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

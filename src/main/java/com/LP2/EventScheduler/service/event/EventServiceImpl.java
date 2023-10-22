@@ -3,6 +3,8 @@ package com.LP2.EventScheduler.service.event;
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
 import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
+import com.LP2.EventScheduler.email.EmailService;
+import com.LP2.EventScheduler.email.mails.EventCanceledEmail;
 import com.LP2.EventScheduler.exception.*;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
 import com.LP2.EventScheduler.model.Category;
@@ -18,19 +20,21 @@ import com.LP2.EventScheduler.repository.ParticipationRepository;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
+import com.LP2.EventScheduler.response.event.EventDetails;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.response.event.EventMapper;
 import com.LP2.EventScheduler.scheduler.SchedulerService;
 import com.LP2.EventScheduler.scheduler.job.SendNotificationsAboutTimeLeftForEvent;
+
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 import org.quartz.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +47,7 @@ public class EventServiceImpl implements EventService {
 
     private final Scheduler scheduler;
     private final SchedulerService schedulerService;
+    private final EmailService emailService;
 
     @Override
     public ListResponse<EventItem> searchPublicEvents(
@@ -65,6 +70,43 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public ListResponse<EventItem> searchForEventsYouParticipateIn(
+            EventSortingOptions sortBy,
+            String categoryName,
+            User authUser
+    ) {
+        Category category = null;
+
+        if (categoryName != null)
+            category = this.categoryRepository
+                    .findByName(categoryName)
+                    .orElseThrow(CategoryNotFoundException::new);
+
+        List<Event> events = this.eventRepository.searchEventsCreatedAndParticipating(sortBy, category, authUser);
+
+        List<EventItem> mappedEvents = EventMapper.INSTANCE.toList(events);
+
+        return new ListResponse<>(mappedEvents);
+    }
+
+    @Override
+    public EventDetails getEventDetails(UUID eventId, User authUser) {
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+
+        boolean isEventOwner = event.getCoordinator().getId().equals(authUser.getId());
+
+        if (event.getVisibility().equals(Visibility.ONLY_CONNECTIONS) && !isEventOwner) {
+            boolean usersConnectionExist = this.connectionRepository.existsConnectionBetweenUsers(event.getCoordinator(), authUser);
+            if (!usersConnectionExist)
+                throw new ConnectionNotFoundException("The event is only for connections");
+        }
+
+        return EventMapper.INSTANCE.toDetail(event);
+    }
+
+    @Override
     public EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user) {
         Category category = this.categoryRepository
                 .findById(eventData.getCategory())
@@ -78,6 +120,7 @@ public class EventServiceImpl implements EventService {
                 .category(category)
                 .coordinator(user)
                 .visibility(eventData.getVisibility())
+                .finishDate(eventData.getFinishDate())
                 .build();
 
         Event savedEvent = this.eventRepository.save(newEvent);
@@ -87,21 +130,25 @@ public class EventServiceImpl implements EventService {
 
         JobDataMap jobData = new JobDataMap();
 
-        jobData.put("eventId", savedEvent.getId());
-        jobData.put("eventRealizationDate", savedEvent.getId());
+        jobData.put("eventId", savedEvent.getId().toString());
+        jobData.put("eventRealizationDate", savedEvent.getRealizationDate().toString());
+        jobData.put("eventFinishDate", savedEvent.getFinishDate().toString());
 
         try {
             JobDetail scheduleNotificationsJobDetail = this.schedulerService.buildJobDetail(
                     new SendNotificationsAboutTimeLeftForEvent(),
                     jobData,
+                    savedEvent.getId().toString(),
                     "job detail to schedule notifications",
-                    "schedule-notifications-job"
+                    "schedule-notifications"
             );
             Trigger scheduleNotificationsTrigger = this.schedulerService.buildTriggerWithCronSchedule(
                     scheduleNotificationsJobDetail,
-                    "schedule-notifications-trigger",
+                    "schedule-notifications",
                     "trigger to schedule notifications",
-                    CronScheduleBuilder.cronSchedule(minuteOfRealizationDateOfEvent + " " + hourOfRealizationDateOfEvent + " * * * ?")
+                    CronScheduleBuilder.cronSchedule(String.format("0 %s %s * * ?",
+                            minuteOfRealizationDateOfEvent,
+                            hourOfRealizationDateOfEvent))
             );
 
             this.scheduler.scheduleJob(scheduleNotificationsJobDetail, scheduleNotificationsTrigger);
@@ -170,6 +217,58 @@ public class EventServiceImpl implements EventService {
         return new MessageResponse("Event remove successfully");
     }
 
+    @Transactional
+    @Override
+    public MessageResponse cancelEvent(UUID eventId, User authUser) {
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+
+        if (!event.getCoordinator().getId().equals(authUser.getId()))
+            throw new IsNotOwnerException("You are not the coordinator of this event");
+
+        if (!event.getStatus().equals(EventStatus.PENDING))
+            throw new UnexpectedResourceValueException("The event must be in a pending state");
+
+        event.setStatus(EventStatus.CANCELLED);
+        this.eventRepository.save(event);
+
+        JobKey eventJob = JobKey.jobKey(
+                event.getId().toString(),
+                "schedule-notifications"
+        );
+
+        try {
+            boolean isEventSchedulerRemoved = this.scheduler.deleteJob(eventJob);
+
+            if (!isEventSchedulerRemoved)
+                throw new FailedEventSchedulerRemovedException();
+        } catch (SchedulerException e) {
+            throw new FailedEventSchedulerRemovedException();
+        }
+
+        List<Participation> participations = event.getParticipants();
+
+        // NOTA: Esto se podría hacer de forma asíncrona
+        for (Participation participation : participations) {
+            Map<String, String> emailData = new HashMap<>();
+            emailData.put("coordinatorUsername", participation.getUser().getUserName());
+            emailData.put("eventName", event.getName());
+
+            try {
+                this.emailService.sendEmail(
+                        participation.getUser().getEmail(),
+                        new EventCanceledEmail(),
+                        emailData
+                );
+            } catch (MessagingException e) {
+                throw new FailedEmailSendingException();
+            }
+        }
+
+        return new MessageResponse("The event has been canceled");
+    }
+
     @Override
     public MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user) {
         Event event = this.eventRepository
@@ -194,6 +293,9 @@ public class EventServiceImpl implements EventService {
 
         if (eventData.getRealizationDate() != null)
             event.setRealizationDate(eventData.getRealizationDate());
+
+        if (eventData.getFinishDate() != null)
+            event.setFinishDate(eventData.getFinishDate());
 
         if (eventData.getLocal() != null)
             event.setLocal(eventData.getLocal());

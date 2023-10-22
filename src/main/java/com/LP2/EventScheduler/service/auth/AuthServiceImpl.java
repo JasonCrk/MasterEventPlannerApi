@@ -13,6 +13,8 @@ import com.LP2.EventScheduler.repository.AccountRepository;
 import com.LP2.EventScheduler.repository.TokenRepository;
 import com.LP2.EventScheduler.repository.UserRepository;
 import com.LP2.EventScheduler.response.auth.JwtResponse;
+import com.LP2.EventScheduler.response.user.SimpleUserResponse;
+import com.LP2.EventScheduler.response.user.UserMapper;
 import com.LP2.EventScheduler.security.JwtService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,10 +41,15 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    public SimpleUserResponse retrieveUserByToken(User authUser) {
+        return UserMapper.INSTANCE.toSimpleResponse(authUser);
+    }
+
+    @Override
     public JwtResponse register(RegisterDTO registerData) {
         var account = new Account();
 
-        this.accountRepository.save(account);
+        var savedAccount = this.accountRepository.save(account);
 
         var user = User.builder()
                 .userName(registerData.getUsername())
@@ -53,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         var savedUser = userRepository.save(user);
+        System.out.println("User ID: " + savedUser.getId() + " & Account ID: " + savedAccount.getId());
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 

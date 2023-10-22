@@ -29,6 +29,8 @@ application:
 
 firebase:
     enabled: false
+    cloud-storage:
+        bucket-name: test.appspot.com
 
 logging:
     level:

@@ -2,7 +2,9 @@ package com.LP2.EventScheduler.controller;
 
 import com.LP2.EventScheduler.dto.auth.LoginDTO;
 import com.LP2.EventScheduler.dto.auth.RegisterDTO;
+import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.auth.JwtResponse;
+import com.LP2.EventScheduler.response.user.SimpleUserResponse;
 import com.LP2.EventScheduler.service.auth.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/auth")
@@ -24,6 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+
+    @GetMapping(path = "/user")
+    public ResponseEntity<SimpleUserResponse> retrieveUserByToken(
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.authService.retrieveUserByToken(authUser));
+    }
 
     @PostMapping(path = "/login")
     public ResponseEntity<JwtResponse> login(
