@@ -1,6 +1,7 @@
 package com.LP2.EventScheduler.service.event;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
+import com.LP2.EventScheduler.dto.event.DeleteEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
 import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
 import com.LP2.EventScheduler.exception.*;
@@ -152,6 +153,22 @@ public class EventServiceImpl implements EventService {
         this.participationRepository.save(userParticipation);
 
         return new MessageResponse("Participation added");
+    }
+    @Override
+    public MessageResponse removeEvent(UUID eventId, DeleteEventDTO deleteData, User user){
+        Event event = this.eventRepository
+                .findById(eventId)
+                .orElseThrow(EventNotFoundException::new);
+        if (event.getStatus() != EventStatus.CANCELLED) {
+            throw new IsNotOwnerException("Event must have status CANCELLED to be deleted");
+        }
+
+        if (!event.getCoordinator().getId().equals(user.getId())) {
+            throw new IsNotOwnerException("You are not the event coordinator");
+        }
+
+        this.eventRepository.delete(event);
+        return new MessageResponse("Event remove successfully");
     }
 
     @Override

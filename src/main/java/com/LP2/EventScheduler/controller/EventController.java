@@ -1,6 +1,7 @@
 package com.LP2.EventScheduler.controller;
 
 import com.LP2.EventScheduler.dto.event.CreateEventDTO;
+import com.LP2.EventScheduler.dto.event.DeleteEventDTO;
 import com.LP2.EventScheduler.dto.event.JoinEventDTO;
 import com.LP2.EventScheduler.dto.event.UpdateEventDTO;
 import com.LP2.EventScheduler.filters.EventSortingOptions;
@@ -54,6 +55,14 @@ public class EventController {
             @Valid @RequestBody JoinEventDTO joinData
     ) {
         return new ResponseEntity<>(this.eventService.joinEvent(eventId, joinData, user), HttpStatus.CREATED);
+    }
+    @DeleteMapping(path = "/{eventId}/delete")
+    public ResponseEntity<MessageResponse> removeEvent(
+            @PathVariable("eventId") UUID eventId,
+            @RequestAttribute("user") User user,
+            @Valid @RequestBody DeleteEventDTO deleteData
+    ){
+        return new ResponseEntity<>(this.eventService.removeEvent(eventId,deleteData,user), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{eventId}")
