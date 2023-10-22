@@ -29,4 +29,5 @@ public interface EventService {
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);
     MessageResponse cancelEvent(UUID eventId, User authUser);
     MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user);
+    MessageResponse removeEvent(UUID eventId, User user);
 }
