@@ -12,8 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 
 import jakarta.transaction.Transactional;
 
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -34,6 +33,9 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
     @Autowired
     private FirebaseCloudMessagingService messagingService;
 
+    @Autowired
+    private Scheduler scheduler;
+
     @Transactional
     @Override
     protected void executeInternal(JobExecutionContext context) {
@@ -48,9 +50,30 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
         if (event == null) return;
 
         LocalDateTime eventRealizationDate = LocalDateTime.parse(data.getString("eventRealizationDate"));
+        LocalDateTime eventFinishDate = LocalDateTime.parse(data.getString("eventFinishDate"));
         LocalDateTime currentTime = LocalDateTime.now();
 
         String notificationMessage = "The time remaining for the \"" + event.getName() + "\" event is ";
+
+        if (ChronoUnit.MINUTES.between(eventFinishDate, currentTime) >= 0L) {
+            event.setStatus(EventStatus.FINALIZED);
+            this.eventRepository.save(event);
+
+            JobKey eventJob = JobKey.jobKey(
+                    event.getId().toString(),
+                    "schedule-notifications"
+            );
+
+            try {
+                boolean isEventSchedulerDeleted = this.scheduler.deleteJob(eventJob);
+                if (!isEventSchedulerDeleted)
+                    System.out.println("Failed when trying to delete the event scheduler");
+            } catch (SchedulerException e) {
+                System.out.println("Failed when trying to delete the event scheduler");
+            }
+
+            return;
+        }
 
         if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 0L) {
             notificationMessage = "It's time for the \"" + event.getName() +  "\" event";
