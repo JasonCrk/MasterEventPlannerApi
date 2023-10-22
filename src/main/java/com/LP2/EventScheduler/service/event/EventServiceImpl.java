@@ -132,6 +132,7 @@ public class EventServiceImpl implements EventService {
 
         jobData.put("eventId", savedEvent.getId().toString());
         jobData.put("eventRealizationDate", savedEvent.getRealizationDate().toString());
+        jobData.put("eventFinishDate", savedEvent.getFinishDate().toString());
 
         try {
             JobDetail scheduleNotificationsJobDetail = this.schedulerService.buildJobDetail(
