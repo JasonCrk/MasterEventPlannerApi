@@ -200,20 +200,21 @@ public class EventServiceImpl implements EventService {
 
         return new MessageResponse("Participation added");
     }
+
     @Override
     public MessageResponse removeEvent(UUID eventId, User user){
         Event event = this.eventRepository
                 .findById(eventId)
                 .orElseThrow(EventNotFoundException::new);
-        if (event.getStatus().equals( EventStatus.CANCELLED)) {
-            throw new UnexpectedResourceValueException("Event must have status CANCELLED to be deleted");
-        }
 
-        if (!event.getCoordinator().getId().equals(user.getId())) {
+        if (!event.getCoordinator().getId().equals(user.getId()))
             throw new IsNotOwnerException("You are not the event coordinator");
-        }
+
+        if (!event.getStatus().equals(EventStatus.CANCELLED))
+            throw new UnexpectedResourceValueException("Event must have status CANCELLED to be deleted");
 
         this.eventRepository.delete(event);
+
         return new MessageResponse("Event remove successfully");
     }
 

@@ -75,6 +75,7 @@ public class EventController {
     ) {
         return new ResponseEntity<>(this.eventService.joinEvent(eventId, joinData, user), HttpStatus.CREATED);
     }
+
     @DeleteMapping(path = "/{eventId}/remove")
     public ResponseEntity<MessageResponse> removeEvent(
             @PathVariable("eventId") UUID eventId,
