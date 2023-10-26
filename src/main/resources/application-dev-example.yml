@@ -3,11 +3,6 @@ spring:
         password:
         url:
         username:
-    mail:
-        host:
-        port:
-        username:
-        password:
     jpa:
         properties:
             hibernate:
@@ -26,6 +21,15 @@ spring:
             tablePrefix: QRTZ_
         threadPool:
             threadCount: 5
+    mail:
+        host:
+        port:
+        username:
+        password:
+        smtp:
+            auth: true
+            starttls:
+                enable: true
 
 application:
     security:
@@ -37,6 +41,8 @@ application:
 
 firebase:
     enabled: true
+    cloud-storage:
+        bucket-name:
 
 logging:
     level:
