@@ -3,6 +3,7 @@ package com.LP2.EventScheduler.controller;
 import com.LP2.EventScheduler.dto.auth.LoginDTO;
 import com.LP2.EventScheduler.dto.auth.RegisterDTO;
 import com.LP2.EventScheduler.model.User;
+import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.auth.JwtResponse;
 import com.LP2.EventScheduler.response.user.SimpleUserResponse;
 import com.LP2.EventScheduler.service.auth.AuthService;
@@ -29,6 +30,11 @@ public class AuthController {
             @RequestAttribute("user") User authUser
     ) {
         return ResponseEntity.ok(this.authService.retrieveUserByToken(authUser));
+    }
+
+    @GetMapping(path = "/verify")
+    public ResponseEntity<MessageResponse> verifyToken() {
+        return new ResponseEntity<>(new MessageResponse("Token is valid"), HttpStatus.OK);
     }
 
     @PostMapping(path = "/login")
