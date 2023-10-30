@@ -16,6 +16,8 @@ import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.connection.ConnectionMapper;
 import com.LP2.EventScheduler.response.connection.ConnectionResponse;
+import com.LP2.EventScheduler.response.invitation.InvitationMapper;
+import com.LP2.EventScheduler.response.invitation.InvitationResponse;
 import com.LP2.EventScheduler.response.user.UserMapper;
 
 import jakarta.mail.MessagingException;
@@ -48,6 +50,13 @@ public class ConnectionServiceImpl implements ConnectionService {
                 authUser,
                 UserMapper.INSTANCE
         ));
+    }
+
+    @Override
+    public ListResponse<InvitationResponse> retrieveUserInvitations(User authUser) {
+        List<Invitation> userInvitations = this.invitationRepository
+                .findByInvitingAndStatusOrderByNotifiedAtDesc(authUser, InvitationStatus.PENDING);
+        return new ListResponse<>(InvitationMapper.INSTANCE.toList(userInvitations));
     }
 
     @Transactional

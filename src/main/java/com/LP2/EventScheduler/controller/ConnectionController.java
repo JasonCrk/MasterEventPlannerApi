@@ -5,6 +5,7 @@ import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.connection.ConnectionResponse;
+import com.LP2.EventScheduler.response.invitation.InvitationResponse;
 import com.LP2.EventScheduler.service.connection.ConnectionService;
 
 import jakarta.validation.Valid;
@@ -27,10 +28,17 @@ public class ConnectionController {
     private ConnectionService connectionService;
 
     @GetMapping
-    public ResponseEntity<ListResponse<ConnectionResponse>> retrieveConnections(
+    public ResponseEntity<ListResponse<ConnectionResponse>> retrieveUserConnections(
             @RequestAttribute("user") User authUser
     ) {
         return ResponseEntity.ok(this.connectionService.retrieveConnections(authUser));
+    }
+
+    @GetMapping(path = "/invitations")
+    public ResponseEntity<ListResponse<InvitationResponse>> retrieveUserInvitations(
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.connectionService.retrieveUserInvitations(authUser));
     }
 
     @PostMapping(path = "/send-invitation")
