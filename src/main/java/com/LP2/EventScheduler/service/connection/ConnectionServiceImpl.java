@@ -110,4 +110,18 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         return new MessageResponse("Invitation accepted");
     }
+
+
+    @Transactional
+    @Override
+    public MessageResponse removeConnection(UUID connectionId, User authUser) {
+        Connection connection = connectionRepository.findById(connectionId)
+                .orElseThrow(() -> new ConnectionNotFoundException("Connection not found"));
+        if (!connection.getConnector().equals(authUser) && !connection.getConnecting().equals(authUser)) {
+            throw new IsNotOwnerException("You are not authorized to remove this connection");
+        }
+        connectionRepository.delete(connection);
+        return new MessageResponse("Connection removed successfully");
+    }
+
 }

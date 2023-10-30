@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface ConnectionService {
     MessageResponse sendInvitation(SendInvitationDTO invitationData, User authUser);
     MessageResponse acceptInvitation(UUID invitationId, User user);
+    MessageResponse removeConnection(UUID connectionId, User authUser);
 }

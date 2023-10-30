@@ -4,6 +4,8 @@ import com.LP2.EventScheduler.dto.connection.SendInvitationDTO;
 import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.service.connection.ConnectionService;
+import com.LP2.EventScheduler.exception.ConnectionNotFoundException;
+import com.LP2.EventScheduler.exception.IsNotOwnerException;
 
 import jakarta.validation.Valid;
 
@@ -45,4 +47,20 @@ public class ConnectionController {
                 HttpStatus.OK
         );
     }
+
+
+    @DeleteMapping("/removeConnection/{connectionId}")
+    public ResponseEntity<MessageResponse> removeConnection(
+            @PathVariable("connectionId") UUID connectionId,
+            @RequestAttribute("user") User authUser) {
+        try {
+            MessageResponse response = connectionService.removeConnection(connectionId, authUser);
+            return ResponseEntity.ok(response);
+        } catch (ConnectionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Connection not found"));
+        } catch (IsNotOwnerException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Unauthorized to remove this connection"));
+        }
+    }
+
 }
