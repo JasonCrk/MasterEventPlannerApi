@@ -12,7 +12,11 @@ import com.LP2.EventScheduler.model.enums.InvitationStatus;
 import com.LP2.EventScheduler.repository.ConnectionRepository;
 import com.LP2.EventScheduler.repository.InvitationRepository;
 import com.LP2.EventScheduler.repository.UserRepository;
+import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
+import com.LP2.EventScheduler.response.connection.ConnectionMapper;
+import com.LP2.EventScheduler.response.connection.ConnectionResponse;
+import com.LP2.EventScheduler.response.user.UserMapper;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -22,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,6 +39,16 @@ public class ConnectionServiceImpl implements ConnectionService {
     private final UserRepository userRepository;
 
     private final EmailService emailService;
+
+    @Override
+    public ListResponse<ConnectionResponse> retrieveConnections(User authUser) {
+        List<Connection> userConnections = this.connectionRepository.findByUser(authUser);
+        return new ListResponse<>(ConnectionMapper.INSTANCE.toList(
+                userConnections,
+                authUser,
+                UserMapper.INSTANCE
+        ));
+    }
 
     @Transactional
     @Override

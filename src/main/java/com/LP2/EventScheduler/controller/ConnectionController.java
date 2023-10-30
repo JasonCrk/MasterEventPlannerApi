@@ -2,7 +2,9 @@ package com.LP2.EventScheduler.controller;
 
 import com.LP2.EventScheduler.dto.connection.SendInvitationDTO;
 import com.LP2.EventScheduler.model.User;
+import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
+import com.LP2.EventScheduler.response.connection.ConnectionResponse;
 import com.LP2.EventScheduler.service.connection.ConnectionService;
 
 import jakarta.validation.Valid;
@@ -23,6 +25,13 @@ public class ConnectionController {
 
     @Autowired
     private ConnectionService connectionService;
+
+    @GetMapping
+    public ResponseEntity<ListResponse<ConnectionResponse>> retrieveConnections(
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.connectionService.retrieveConnections(authUser));
+    }
 
     @PostMapping(path = "/send-invitation")
     public ResponseEntity<MessageResponse> sendInvitation(
