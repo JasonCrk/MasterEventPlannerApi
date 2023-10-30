@@ -25,8 +25,11 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping(path = "/{accountId}")
-    public ResponseEntity<AccountDetails> retrieveAccount(@PathVariable("accountId") UUID accountId) {
-        return ResponseEntity.ok(this.accountService.retrieveAccount(accountId));
+    public ResponseEntity<AccountDetails> retrieveAccount(
+            @PathVariable("accountId") UUID accountId,
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.accountService.retrieveAccount(accountId, authUser));
     }
 
     @PatchMapping

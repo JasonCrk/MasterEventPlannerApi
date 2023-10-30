@@ -17,4 +17,5 @@ public class AccountDetails {
     private String banner;
     private String about;
     private UserUsernameResponse user;
+    private String invitationSent;
 }

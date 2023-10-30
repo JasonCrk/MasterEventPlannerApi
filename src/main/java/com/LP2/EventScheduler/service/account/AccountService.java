@@ -8,6 +8,6 @@ import com.LP2.EventScheduler.response.account.AccountDetails;
 import java.util.UUID;
 
 public interface AccountService {
-    AccountDetails retrieveAccount(UUID accountId);
+    AccountDetails retrieveAccount(UUID accountId, User authUser);
     MessageResponse updateAccount(UpdateAccountDTO accountData, User authUser);
 }

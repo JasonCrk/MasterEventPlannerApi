@@ -5,8 +5,10 @@ import com.LP2.EventScheduler.exception.AccountNotFoundException;
 import com.LP2.EventScheduler.exception.FailedImageUploadException;
 import com.LP2.EventScheduler.firebase.FirebaseStorageService;
 import com.LP2.EventScheduler.model.Account;
+import com.LP2.EventScheduler.model.Invitation;
 import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.repository.AccountRepository;
+import com.LP2.EventScheduler.repository.InvitationRepository;
 import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.account.AccountDetails;
 import com.LP2.EventScheduler.response.account.AccountMapper;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,15 +26,26 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final InvitationRepository invitationRepository;
 
     private final FirebaseStorageService storageService;
 
     @Override
-    public AccountDetails retrieveAccount(UUID accountId) {
+    public AccountDetails retrieveAccount(UUID accountId, User authUser) {
         Account account = this.accountRepository
                 .findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
-        return AccountMapper.INSTANCE.toDetailResponse(account);
+
+        Optional<Invitation> invitationSent;
+
+        if (account.getUser().getId().equals(authUser.getId())) {
+            invitationSent = Optional.empty();
+        } else {
+            invitationSent = this.invitationRepository
+                    .findByInviterAndInviting(authUser, account.getUser());
+        }
+
+        return AccountMapper.INSTANCE.toDetailResponse(account, invitationSent);
     }
 
     @Override
