@@ -5,6 +5,7 @@ import com.LP2.EventScheduler.model.Category;
 import com.LP2.EventScheduler.model.Event;
 import com.LP2.EventScheduler.model.Participation;
 import com.LP2.EventScheduler.model.User;
+import com.LP2.EventScheduler.model.enums.EventStatus;
 import com.LP2.EventScheduler.model.enums.Visibility;
 
 import jakarta.persistence.EntityManager;
@@ -54,6 +55,8 @@ public class SearchEventsRepositoryImpl implements SearchEventsRepository {
 
         if (category != null)
             predicates.add(cb.equal(eventRoot.get("category"), category));
+
+        predicates.add(cb.notEqual(eventRoot.get("status"), EventStatus.CANCELLED));
 
         cq.select(eventRoot).where(predicates.toArray(new Predicate[]{})).orderBy(orderBy);
 
