@@ -15,4 +15,5 @@ import java.util.UUID;
 public interface ParticipationRepository extends JpaRepository<Participation, UUID> {
     Optional<Participation> findByUserAndEvent(User user, Event event);
     List<Participation> findByEvent(Event event);
+    boolean existsByUserAndEvent(User user, Event event);
 }

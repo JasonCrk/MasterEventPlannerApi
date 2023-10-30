@@ -103,7 +103,14 @@ public class EventServiceImpl implements EventService {
                 throw new ConnectionNotFoundException("The event is only for connections");
         }
 
-        return EventMapper.INSTANCE.toDetail(event);
+        boolean isUserParticipatingInEvent;
+
+        if (isEventOwner)
+            isUserParticipatingInEvent = false;
+        else
+            isUserParticipatingInEvent = this.participationRepository.existsByUserAndEvent(authUser, event);
+
+        return EventMapper.INSTANCE.toDetail(event, isUserParticipatingInEvent);
     }
 
     @Override

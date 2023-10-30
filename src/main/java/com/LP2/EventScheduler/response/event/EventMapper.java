@@ -27,11 +27,12 @@ public interface EventMapper {
     )
     EventItem toResponse(Event event);
 
+    @Mapping(source = "isUserParticipating", target = "participating")
     @Mapping(expression = "java(event.getCreatedAt() == null ? null : event.getCreatedAt().toString())", target = "createdAt")
     @Mapping(expression = "java(event.getFinishDate() == null ? null : event.getFinishDate().toString())", target = "finishDate")
     @Mapping(
             expression = "java(event.getRealizationDate() == null ? null : event.getRealizationDate().toString())",
             target = "realizationDate"
     )
-    EventDetails toDetail(Event event);
+    EventDetails toDetail(Event event, boolean isUserParticipating);
 }

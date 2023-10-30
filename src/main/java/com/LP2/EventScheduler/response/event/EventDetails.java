@@ -23,5 +23,6 @@ public class EventDetails {
     private String finishDate;
     private CategoryResponse category;
     private String createdAt;
+    private boolean participating;
     private String local;
 }
