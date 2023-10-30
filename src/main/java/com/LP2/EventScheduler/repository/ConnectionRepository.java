@@ -23,6 +23,7 @@ public interface ConnectionRepository extends JpaRepository<Connection, UUID> {
     @Query(value = """
             SELECT c FROM Connection c WHERE\s
             c.connector = :user OR c.connecting = :user
+            ORDER BY c.connectedAt DESC
             """)
     List<Connection> findByUser(@Param("user") User user);
 }
