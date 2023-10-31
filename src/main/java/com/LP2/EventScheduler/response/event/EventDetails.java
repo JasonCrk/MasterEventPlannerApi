@@ -19,10 +19,11 @@ public class EventDetails {
     private String description;
     private String visibility;
     private String status;
+    private String local;
     private String realizationDate;
     private String finishDate;
     private CategoryResponse category;
-    private String createdAt;
     private boolean participating;
-    private String local;
+    private int numberParticipants;
+    private String createdAt;
 }

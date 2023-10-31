@@ -21,5 +21,6 @@ public class EventItem {
     private String status;
     private String realizationDate;
     private CategoryResponse category;
+    private int numberParticipants;
     private String createdAt;
 }
