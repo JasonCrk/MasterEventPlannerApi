@@ -112,12 +112,12 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
 
-    @Transactional
+
     @Override
     public MessageResponse removeConnection(UUID connectionId, User authUser) {
         Connection connection = connectionRepository.findById(connectionId)
-                .orElseThrow(() -> new ConnectionNotFoundException("Connection not found"));
-        if (!connection.getConnector().equals(authUser) && !connection.getConnecting().equals(authUser)) {
+                .orElseThrow(() -> new ConnectionNotFoundException("The connection does not exist"));
+        if (!connection.getConnector().getId().equals(authUser.getId()) && !connection.getConnecting().getId().equals(authUser.getId())) {
             throw new IsNotOwnerException("You are not authorized to remove this connection");
         }
         connectionRepository.delete(connection);
