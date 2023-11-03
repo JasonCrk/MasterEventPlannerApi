@@ -100,4 +100,14 @@ public class EventController {
     ) {
         return new ResponseEntity<>(this.eventService.updateEvent(eventId, eventData, user), HttpStatus.OK);
     }
+    @GetMapping(path = "/{userId}/publicEvents")
+    public ResponseEntity<ListResponse<EventItem>> getUserPublicEvents(
+            @PathVariable("userId") UUID userId
+    ) {
+        ListResponse<EventItem> userPublicEvents = eventService.getUserPublicEvents(userId);
+
+        return userPublicEvents != null
+                ? ResponseEntity.ok(userPublicEvents)
+                : ResponseEntity.notFound().build();
+    }
 }
