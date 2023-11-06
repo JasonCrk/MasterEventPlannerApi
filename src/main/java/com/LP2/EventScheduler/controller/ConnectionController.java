@@ -8,6 +8,7 @@ import com.LP2.EventScheduler.response.connection.ConnectionResponse;
 import com.LP2.EventScheduler.response.invitation.InvitationResponse;
 import com.LP2.EventScheduler.service.connection.ConnectionService;
 
+
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -62,4 +63,13 @@ public class ConnectionController {
                 HttpStatus.OK
         );
     }
+
+
+    @DeleteMapping("/{connectionId}")
+    public ResponseEntity<MessageResponse> removeConnection(
+            @PathVariable("connectionId") UUID connectionId,
+            @RequestAttribute("user") User authUser) {
+        return ResponseEntity.ok(connectionService.removeConnection(connectionId,authUser));
+    }
+
 }
