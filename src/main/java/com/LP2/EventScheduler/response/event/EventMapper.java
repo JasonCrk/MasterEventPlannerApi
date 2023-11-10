@@ -13,6 +13,7 @@ public interface EventMapper {
 
     EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
+    @Mapping(expression = "java(user.getUserName() == null ? null : user.getUserName())", target = "coordinator.username")
     @Mapping(expression = "java(event.getParticipants() == null ? 0 : event.getParticipants().size())", target = "numberParticipants")
     @Mapping(expression = "java(event.getCreatedAt() == null ? null : event.getCreatedAt().toString())", target = "createdAt")
     @Mapping(
@@ -21,6 +22,7 @@ public interface EventMapper {
     )
     List<EventItem> toList(List<Event> events);
 
+    @Mapping(expression = "java(user.getUserName() == null ? null : user.getUserName())", target = "coordinator.username")
     @Mapping(expression = "java(event.getParticipants() == null ? 0 : event.getParticipants().size())", target = "numberParticipants")
     @Mapping(expression = "java(event.getCreatedAt() == null ? null : event.getCreatedAt().toString())", target = "createdAt")
     @Mapping(
@@ -29,6 +31,7 @@ public interface EventMapper {
     )
     EventItem toResponse(Event event);
 
+    @Mapping(expression = "java(user.getUserName() == null ? null : user.getUserName())", target = "coordinator.username")
     @Mapping(source = "isUserParticipating", target = "participating")
     @Mapping(expression = "java(event.getParticipants() == null ? 0 : event.getParticipants().size())", target = "numberParticipants")
     @Mapping(expression = "java(event.getCreatedAt() == null ? null : event.getCreatedAt().toString())", target = "createdAt")
