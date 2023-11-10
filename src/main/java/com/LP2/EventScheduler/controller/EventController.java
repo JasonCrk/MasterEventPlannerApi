@@ -8,6 +8,7 @@ import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
+import com.LP2.EventScheduler.response.event.EventDetails;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.service.event.EventService;
 
@@ -51,8 +52,17 @@ public class EventController {
         );
     }
 
+    @GetMapping(path = "/public/{userId}")
+    public ResponseEntity<ListResponse<EventItem>> getUserPublicEvents(
+            @PathVariable("userId") UUID userId
+    ) {
+        ListResponse<EventItem> userPublicEvents = eventService.getUserPublicEvents(userId);
+
+        return ResponseEntity.ok(eventService.getUserPublicEvents(userId));
+    }
+
     @GetMapping(path = "/{eventId}")
-    public ResponseEntity<?> getEventDetails(
+    public ResponseEntity<EventDetails> getEventDetails(
             @PathVariable("eventId") UUID eventId,
             @RequestAttribute("user") User authUser
     ) {
@@ -99,13 +109,5 @@ public class EventController {
             @Valid @RequestBody UpdateEventDTO eventData
     ) {
         return new ResponseEntity<>(this.eventService.updateEvent(eventId, eventData, user), HttpStatus.OK);
-    }
-    @GetMapping(path = "/public/{userId}")
-    public ResponseEntity<ListResponse<EventItem>> getUserPublicEvents(
-            @PathVariable("userId") UUID userId
-    ) {
-        ListResponse<EventItem> userPublicEvents = eventService.getUserPublicEvents(userId);
-
-        return ResponseEntity.ok(eventService.getUserPublicEvents(userId));
     }
 }
