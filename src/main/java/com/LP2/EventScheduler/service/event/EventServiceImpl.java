@@ -317,12 +317,8 @@ public class EventServiceImpl implements EventService {
     public ListResponse<EventItem> getUserPublicEvents(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        List<Event> publicEvents = eventRepository.findPublicEventsByUser(user);
+        List<Event> publicEvents = eventRepository.findByCoordinatorAndVisibilityOrderByCreatedAtDesc(user, Visibility.PUBLIC);
 
-        publicEvents.sort(Comparator.comparing(Event::getCreatedAt).reversed());
-
-        List<EventItem> mappedEvents = EventMapper.INSTANCE.toList(publicEvents);
-
-        return new ListResponse<>(mappedEvents);
+        return new ListResponse<>(EventMapper.INSTANCE.toList(publicEvents));
     }
 }

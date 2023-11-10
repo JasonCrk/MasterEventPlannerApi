@@ -2,6 +2,7 @@ package com.LP2.EventScheduler.repository;
 
 import com.LP2.EventScheduler.model.Event;
 import com.LP2.EventScheduler.model.User;
+import com.LP2.EventScheduler.model.enums.Visibility;
 import com.LP2.EventScheduler.repository.custom.SearchEventsRepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,5 @@ import java.util.UUID;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID>, SearchEventsRepository {
-    @Query("SELECT e FROM Event e WHERE e.coordinator = :user AND e.visibility = 'PUBLIC'")
-    List<Event> findPublicEventsByUser(@Param("user") User user);
+    List<Event> findByCoordinatorAndVisibilityOrderByCreatedAtDesc(User coordinator, Visibility visibility);
 }
