@@ -24,11 +24,11 @@ public interface EventService {
             String categoryName,
             User authUser
     );
+    ListResponse<EventItem> getUserPublicEvents(UUID userId);
     EventDetails getEventDetails(UUID eventId, User authUser);
     EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user);
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);
     MessageResponse cancelEvent(UUID eventId, User authUser);
     MessageResponse updateEvent(UUID eventId, UpdateEventDTO eventData, User user);
     MessageResponse removeEvent(UUID eventId, User user);
-    ListResponse<EventItem> getUserPublicEvents(UUID userId);
 }
