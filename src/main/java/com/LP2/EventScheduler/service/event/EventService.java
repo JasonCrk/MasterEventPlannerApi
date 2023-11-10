@@ -24,6 +24,7 @@ public interface EventService {
             String categoryName,
             User authUser
     );
+    ListResponse<EventItem> getUserPublicEvents(UUID userId);
     EventDetails getEventDetails(UUID eventId, User authUser);
     EntityWithMessageResponse<EventItem> scheduleEvent(CreateEventDTO eventData, User user);
     MessageResponse joinEvent(UUID eventId, JoinEventDTO joinData, User user);

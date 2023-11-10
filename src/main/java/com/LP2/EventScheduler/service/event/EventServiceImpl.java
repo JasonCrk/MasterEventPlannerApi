@@ -13,10 +13,7 @@ import com.LP2.EventScheduler.model.Participation;
 import com.LP2.EventScheduler.model.User;
 import com.LP2.EventScheduler.model.enums.EventStatus;
 import com.LP2.EventScheduler.model.enums.Visibility;
-import com.LP2.EventScheduler.repository.CategoryRepository;
-import com.LP2.EventScheduler.repository.ConnectionRepository;
-import com.LP2.EventScheduler.repository.EventRepository;
-import com.LP2.EventScheduler.repository.ParticipationRepository;
+import com.LP2.EventScheduler.repository.*;
 import com.LP2.EventScheduler.response.EntityWithMessageResponse;
 import com.LP2.EventScheduler.response.ListResponse;
 import com.LP2.EventScheduler.response.MessageResponse;
@@ -44,6 +41,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final ParticipationRepository participationRepository;
     private final ConnectionRepository connectionRepository;
+    private final UserRepository userRepository;
 
     private final Scheduler scheduler;
     private final SchedulerService schedulerService;
@@ -314,5 +312,13 @@ public class EventServiceImpl implements EventService {
         this.eventRepository.save(event);
 
         return new MessageResponse("Event updated successfully");
+    }
+    @Override
+    public ListResponse<EventItem> getUserPublicEvents(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        List<Event> publicEvents = eventRepository.findByCoordinatorAndVisibilityOrderByCreatedAtDesc(user, Visibility.PUBLIC);
+
+        return new ListResponse<>(EventMapper.INSTANCE.toList(publicEvents));
     }
 }
