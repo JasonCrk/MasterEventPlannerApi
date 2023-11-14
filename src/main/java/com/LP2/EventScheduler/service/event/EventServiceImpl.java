@@ -95,9 +95,6 @@ public class EventServiceImpl implements EventService {
 
         boolean isEventOwner = event.getCoordinator().getId().equals(authUser.getId());
 
-        if (event.getStatus().equals(EventStatus.CANCELLED))
-            throw new UnexpectedResourceValueException("The event is canceled");
-
         if (event.getVisibility().equals(Visibility.ONLY_CONNECTIONS) && !isEventOwner) {
             boolean usersConnectionExist = this.connectionRepository.existsConnectionBetweenUsers(event.getCoordinator(), authUser);
             if (!usersConnectionExist)
