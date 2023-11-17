@@ -13,6 +13,7 @@ import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.account.AccountDetails;
 import com.LP2.EventScheduler.response.account.AccountMapper;
 
+import com.LP2.EventScheduler.response.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -36,16 +37,14 @@ public class AccountServiceImpl implements AccountService {
                 .findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
 
-        Optional<Invitation> invitationSent;
+        Optional<Invitation> invitationSent = Optional.empty();
 
-        if (account.getUser().getId().equals(authUser.getId())) {
-            invitationSent = Optional.empty();
-        } else {
+        if (!account.getUser().getId().equals(authUser.getId())) {
             invitationSent = this.invitationRepository
                     .findByInviterAndInviting(authUser, account.getUser());
         }
 
-        return AccountMapper.INSTANCE.toDetailResponse(account, invitationSent);
+        return AccountMapper.INSTANCE.toDetailResponse(account, invitationSent, UserMapper.INSTANCE);
     }
 
     @Override
