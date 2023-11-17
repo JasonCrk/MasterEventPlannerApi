@@ -12,6 +12,7 @@ import com.LP2.EventScheduler.model.enums.TokenType;
 import com.LP2.EventScheduler.repository.AccountRepository;
 import com.LP2.EventScheduler.repository.TokenRepository;
 import com.LP2.EventScheduler.repository.UserRepository;
+import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.auth.JwtResponse;
 import com.LP2.EventScheduler.response.user.SimpleUserResponse;
 import com.LP2.EventScheduler.response.user.UserMapper;
@@ -130,6 +131,32 @@ public class AuthServiceImpl implements AuthService {
                 .refreshToken(refreshToken)
                 .authHeader("Bearer")
                 .build();
+    }
+
+    @Override
+    public MessageResponse verifyToken(HttpServletRequest request) {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        final String accessToken;
+        final String userEmail;
+
+        if (authHeader == null ||!authHeader.startsWith("Bearer "))
+            throw new NotAuthenticatedException();
+
+        accessToken = authHeader.substring(7);
+
+        userEmail = jwtService.extractUsername(accessToken);
+
+        if (userEmail == null)
+            throw new InvalidJwtException("Token is invalid");
+
+        var user = this.userRepository.findByEmail(userEmail)
+                .orElseThrow();
+
+        if (!jwtService.isTokenValid(accessToken, user))
+            throw new InvalidJwtException("Token is invalid");
+
+        return new MessageResponse("Token is valid");
     }
 
     private void saveUserToken(User user, String jwtToken) {

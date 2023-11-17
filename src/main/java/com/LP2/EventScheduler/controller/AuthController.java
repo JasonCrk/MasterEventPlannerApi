@@ -33,8 +33,10 @@ public class AuthController {
     }
 
     @GetMapping(path = "/verify")
-    public ResponseEntity<MessageResponse> verifyToken() {
-        return new ResponseEntity<>(new MessageResponse("Token is valid"), HttpStatus.OK);
+    public ResponseEntity<MessageResponse> verifyToken(
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(this.authService.verifyToken(request));
     }
 
     @PostMapping(path = "/login")
