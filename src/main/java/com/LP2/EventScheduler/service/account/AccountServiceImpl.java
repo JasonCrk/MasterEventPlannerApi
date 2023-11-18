@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
                     .findByInviterAndInviting(authUser, account.getUser());
         }
 
-        return AccountMapper.INSTANCE.toDetailResponse(account, invitationSent, UserMapper.INSTANCE);
+        return AccountMapper.INSTANCE.toDetailResponse(account, invitationSent);
     }
 
     @Override
