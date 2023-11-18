@@ -70,7 +70,8 @@ public class AccountServiceImpl implements AccountService {
             }
         }
 
-        account.setAbout(accountData.getAbout());
+        if (accountData.getAbout() != null)
+            account.setAbout(accountData.getAbout());
 
         this.accountRepository.save(account);
 
