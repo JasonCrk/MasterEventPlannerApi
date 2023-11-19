@@ -33,6 +33,9 @@ public class Invitation {
     @JoinColumn(name = "inviting_id", nullable = false)
     private User inviting;
 
+    @OneToOne(mappedBy = "invitation", cascade = CascadeType.ALL)
+    private Connection connection;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")

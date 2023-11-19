@@ -31,6 +31,10 @@ public class Connection {
     @JoinColumn(name = "connecting_id", nullable = false)
     private User connecting;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "invitation_id", nullable = false)
+    private Invitation invitation;
+
     @Builder.Default
     @CreatedDate
     @Column(nullable = false)
