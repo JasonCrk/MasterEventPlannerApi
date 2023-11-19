@@ -107,6 +107,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         Connection connection = Connection.builder()
                 .connector(invitation.getInviter())
                 .connecting(authUser)
+                .invitation(invitation)
                 .build();
 
         this.connectionRepository.save(connection);
@@ -130,17 +131,17 @@ public class ConnectionServiceImpl implements ConnectionService {
         return new MessageResponse("Invitation accepted");
     }
 
-
-
     @Override
     public MessageResponse removeConnection(UUID connectionId, User authUser) {
         Connection connection = connectionRepository.findById(connectionId)
                 .orElseThrow(() -> new ConnectionNotFoundException("The connection does not exist"));
-        if (!connection.getConnector().getId().equals(authUser.getId()) && !connection.getConnecting().getId().equals(authUser.getId())) {
+
+        if (!connection.getConnector().getId().equals(authUser.getId()) &&
+                !connection.getConnecting().getId().equals(authUser.getId()))
             throw new IsNotOwnerException("You are not authorized to remove this connection");
-        }
+
         connectionRepository.delete(connection);
+
         return new MessageResponse("Connection removed successfully");
     }
-
 }
