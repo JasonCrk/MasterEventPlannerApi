@@ -20,7 +20,6 @@ import com.LP2.EventScheduler.response.connection.ConnectionResponse;
 import com.LP2.EventScheduler.response.invitation.InvitationMapper;
 import com.LP2.EventScheduler.response.invitation.InvitationResponse;
 
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -80,11 +80,11 @@ public class ConnectionServiceImpl implements ConnectionService {
         emailData.put("invitingPicture", inviting.getAccount().getPicture());
         emailData.put("invitingUsername", inviting.getUserName());
 
-        try {
-            this.emailService.sendEmail(inviting.getEmail(), new ReceivedInvitationEmail(), emailData);
-        } catch (MessagingException e) {
-            throw new FailedEmailSendingException();
-        }
+        CompletableFuture.runAsync(() -> this.emailService.sendEmail(
+                inviting.getEmail(),
+                new ReceivedInvitationEmail(),
+                emailData
+        ));
 
         return new MessageResponse("Invitation sent successfully");
     }
@@ -119,15 +119,11 @@ public class ConnectionServiceImpl implements ConnectionService {
         emailData.put("invitingPicture", authUser.getAccount().getPicture());
         emailData.put("invitingUsername", authUser.getUserName());
 
-        try {
-            this.emailService.sendEmail(
-                    invitation.getInviter().getEmail(),
-                    new InvitationAcceptedEmail(),
-                    emailData
-            );
-        } catch (MessagingException e) {
-            throw new FailedEmailSendingException();
-        }
+        CompletableFuture.runAsync(() -> this.emailService.sendEmail(
+                invitation.getInviter().getEmail(),
+                new InvitationAcceptedEmail(),
+                emailData
+        ));
 
         return new MessageResponse("Invitation accepted");
     }
@@ -152,15 +148,11 @@ public class ConnectionServiceImpl implements ConnectionService {
         emailData.put("invitingPicture", authUser.getAccount().getPicture());
         emailData.put("invitingUsername", authUser.getUserName());
 
-        try {
-            this.emailService.sendEmail(
-                    invitation.getInviter().getEmail(),
-                    new InvitationRejectedEmail(),
-                    emailData
-            );
-        } catch (MessagingException e) {
-            throw new FailedEmailSendingException();
-        }
+        CompletableFuture.runAsync(() -> this.emailService.sendEmail(
+                invitation.getInviter().getEmail(),
+                new InvitationRejectedEmail(),
+                emailData
+        ));
 
         return new MessageResponse("Rejected invitation");
     }

@@ -23,7 +23,6 @@ import com.LP2.EventScheduler.response.event.EventMapper;
 import com.LP2.EventScheduler.scheduler.SchedulerService;
 import com.LP2.EventScheduler.scheduler.job.SendNotificationsAboutTimeLeftForEvent;
 
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +31,7 @@ import org.quartz.*;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -255,21 +255,16 @@ public class EventServiceImpl implements EventService {
 
         List<Participation> participations = event.getParticipants();
 
-        // NOTA: Esto se podría hacer de forma asíncrona
         for (Participation participation : participations) {
             Map<String, String> emailData = new HashMap<>();
             emailData.put("coordinatorUsername", participation.getUser().getUserName());
             emailData.put("eventName", event.getName());
 
-            try {
-                this.emailService.sendEmail(
-                        participation.getUser().getEmail(),
-                        new EventCanceledEmail(),
-                        emailData
-                );
-            } catch (MessagingException e) {
-                throw new FailedEmailSendingException();
-            }
+            CompletableFuture.runAsync(() -> this.emailService.sendEmail(
+                    participation.getUser().getEmail(),
+                    new EventCanceledEmail(),
+                    emailData
+            ));
         }
 
         return new MessageResponse("The event has been canceled");
