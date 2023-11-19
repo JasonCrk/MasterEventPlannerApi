@@ -64,6 +64,13 @@ public class ConnectionController {
         );
     }
 
+    @DeleteMapping("/reject-invitation/{invitationId}")
+    public ResponseEntity<MessageResponse> rejectInvitation(
+            @PathVariable("invitationId") UUID invitationId,
+            @RequestAttribute("user") User authUser
+    ) {
+        return ResponseEntity.ok(this.connectionService.rejectInvitation(invitationId, authUser));
+    }
 
     @DeleteMapping("/{connectionId}")
     public ResponseEntity<MessageResponse> removeConnection(
@@ -71,5 +78,4 @@ public class ConnectionController {
             @RequestAttribute("user") User authUser) {
         return ResponseEntity.ok(connectionService.removeConnection(connectionId,authUser));
     }
-
 }

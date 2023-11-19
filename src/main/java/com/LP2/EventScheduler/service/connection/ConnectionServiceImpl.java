@@ -3,6 +3,7 @@ package com.LP2.EventScheduler.service.connection;
 import com.LP2.EventScheduler.dto.connection.SendInvitationDTO;
 import com.LP2.EventScheduler.email.EmailService;
 import com.LP2.EventScheduler.email.mails.InvitationAcceptedEmail;
+import com.LP2.EventScheduler.email.mails.InvitationRejectedEmail;
 import com.LP2.EventScheduler.email.mails.ReceivedInvitationEmail;
 import com.LP2.EventScheduler.exception.*;
 import com.LP2.EventScheduler.model.Connection;
@@ -129,6 +130,39 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
 
         return new MessageResponse("Invitation accepted");
+    }
+
+    @Override
+    public MessageResponse rejectInvitation(UUID invitationId, User authUser) {
+        Invitation invitation = this.invitationRepository
+                .findById(invitationId)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        if (!invitation.getStatus().equals(InvitationStatus.PENDING))
+            throw new UnexpectedResourceValueException("The invitation must be status pending");
+
+        if (!invitation.getInviting().getId().equals(authUser.getId()))
+            throw new UnexpectedResourceValueException("The invitation is not for you");
+
+        this.invitationRepository.delete(invitation);
+
+        Map<String, String> emailData = new HashMap<>();
+        emailData.put("inviterPicture", invitation.getInviter().getAccount().getPicture());
+        emailData.put("inviterUsername", invitation.getInviter().getUserName());
+        emailData.put("invitingPicture", authUser.getAccount().getPicture());
+        emailData.put("invitingUsername", authUser.getUserName());
+
+        try {
+            this.emailService.sendEmail(
+                    invitation.getInviter().getEmail(),
+                    new InvitationRejectedEmail(),
+                    emailData
+            );
+        } catch (MessagingException e) {
+            throw new FailedEmailSendingException();
+        }
+
+        return new MessageResponse("Rejected invitation");
     }
 
     @Override

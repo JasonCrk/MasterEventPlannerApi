@@ -14,5 +14,6 @@ public interface ConnectionService {
     ListResponse<InvitationResponse> retrieveUserInvitations(User authUser);
     MessageResponse sendInvitation(SendInvitationDTO invitationData, User authUser);
     MessageResponse acceptInvitation(UUID invitationId, User user);
+    MessageResponse rejectInvitation(UUID invitationId, User authUser);
     MessageResponse removeConnection(UUID connectionId, User authUser);
 }
