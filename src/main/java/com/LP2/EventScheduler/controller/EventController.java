@@ -31,7 +31,7 @@ public class EventController {
 
     @GetMapping(path = "/search", name = "searchPublicEvents")
     public ResponseEntity<ListResponse<EventItem>> searchPublicEvents(
-            @RequestParam String searchQuery,
+            @RequestParam(name = "q") String searchQuery,
             @RequestParam(required = false) EventSortingOptions sortBy,
             @RequestParam(required = false, name = "category") String categoryName
     ) {
