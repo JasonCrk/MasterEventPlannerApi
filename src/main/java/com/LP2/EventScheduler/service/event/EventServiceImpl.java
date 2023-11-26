@@ -28,8 +28,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.quartz.*;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -292,8 +294,25 @@ public class EventServiceImpl implements EventService {
         if (eventData.getDescription() != null)
             event.setDescription(eventData.getDescription());
 
-        if (eventData.getRealizationDate() != null)
+        if (eventData.getRealizationDate() != null) {
+            TriggerKey eventTriggerKey = new TriggerKey(event.getId().toString());
+
+            try {
+                CronTriggerImpl eventTriggerUpdated = new CronTriggerImpl();
+                eventTriggerUpdated.setKey(eventTriggerKey);
+                eventTriggerUpdated.setCronExpression(
+                        String.format("0 %s %s * * ?",
+                                eventData.getRealizationDate().getMinute(),
+                                eventData.getRealizationDate().getHour())
+                );
+
+                this.scheduler.rescheduleJob(eventTriggerKey, eventTriggerUpdated);
+            } catch (SchedulerException | ParseException e) {
+                throw new ScheduleCreationException("Event could not be rescheduled");
+            }
+
             event.setRealizationDate(eventData.getRealizationDate());
+        }
 
         if (eventData.getFinishDate() != null)
             event.setFinishDate(eventData.getFinishDate());
@@ -308,6 +327,7 @@ public class EventServiceImpl implements EventService {
 
         return new MessageResponse("Event updated successfully");
     }
+
     @Override
     public ListResponse<EventItem> getUserPublicEvents(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
