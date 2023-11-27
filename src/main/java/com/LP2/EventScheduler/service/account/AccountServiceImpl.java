@@ -41,7 +41,7 @@ public class AccountServiceImpl implements AccountService {
 
         if (!account.getUser().getId().equals(authUser.getId())) {
             invitationSent = this.invitationRepository
-                    .findByInviterAndInviting(authUser, account.getUser());
+                    .findInvitationBetweenUsers(authUser, account.getUser());
         }
 
         return AccountMapper.INSTANCE.toDetailResponse(account, invitationSent);
