@@ -6,6 +6,7 @@ import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.account.AccountDetails;
 import com.LP2.EventScheduler.service.account.AccountService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    @Operation(summary = "Retrieve account by id")
     @GetMapping(path = "/{accountId}")
     public ResponseEntity<AccountDetails> retrieveAccount(
             @PathVariable("accountId") UUID accountId,
@@ -35,6 +37,7 @@ public class AccountController {
         return ResponseEntity.ok(this.accountService.retrieveAccount(accountId, authUser));
     }
 
+    @Operation(summary = "You can update the banner, picture or \"about\" of your account")
     @PatchMapping
     public ResponseEntity<MessageResponse> updateAccount(
             @Valid UpdateAccountDTO accountData,

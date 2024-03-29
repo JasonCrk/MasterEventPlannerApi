@@ -12,6 +12,7 @@ import com.LP2.EventScheduler.response.event.EventDetails;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.service.event.EventService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
@@ -32,6 +33,7 @@ public class EventController {
 
     private final EventService eventService;
 
+    @Operation(summary = "Search public events")
     @GetMapping(path = "/search", name = "searchPublicEvents")
     public ResponseEntity<ListResponse<EventItem>> searchPublicEvents(
             @RequestParam(name = "q") String searchQuery,
@@ -43,6 +45,7 @@ public class EventController {
         );
     }
 
+    @Operation(summary = "Retrieve events in which the user participates or are theirs")
     @GetMapping(path = "/participating")
     public ResponseEntity<ListResponse<EventItem>> searchForEventsYouParticipateIn(
             @RequestParam(required = false) EventSortingOptions sortBy,
@@ -55,6 +58,7 @@ public class EventController {
         );
     }
 
+    @Operation(summary = "Retrieve public events from a user")
     @GetMapping(path = "/public/{userId}")
     public ResponseEntity<ListResponse<EventItem>> getUserPublicEvents(
             @PathVariable("userId") UUID userId
@@ -64,6 +68,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.getUserPublicEvents(userId));
     }
 
+    @Operation(summary = "Retrieve event details by id")
     @GetMapping(path = "/{eventId}")
     public ResponseEntity<EventDetails> getEventDetails(
             @PathVariable("eventId") UUID eventId,
@@ -72,6 +77,7 @@ public class EventController {
         return new ResponseEntity<>(this.eventService.getEventDetails(eventId, authUser), HttpStatus.OK);
     }
 
+    @Operation(summary = "Create a new event")
     @PostMapping
     public ResponseEntity<EntityWithMessageResponse<EventItem>> scheduleEvent(
             @Valid @RequestBody CreateEventDTO eventData,
@@ -80,6 +86,7 @@ public class EventController {
         return new ResponseEntity<>(this.eventService.scheduleEvent(eventData, user), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "The user can join (participate) in an event")
     @PostMapping(path = "/{eventId}/join")
     public ResponseEntity<MessageResponse> joinTheEvent(
             @PathVariable("eventId") UUID eventId,
@@ -89,6 +96,7 @@ public class EventController {
         return new ResponseEntity<>(this.eventService.joinEvent(eventId, joinData, user), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Remove event by id")
     @DeleteMapping(path = "/{eventId}/remove")
     public ResponseEntity<MessageResponse> removeEvent(
             @PathVariable("eventId") UUID eventId,
@@ -97,6 +105,7 @@ public class EventController {
         return new ResponseEntity<>(this.eventService.removeEvent(eventId, user), HttpStatus.OK);
     }
 
+    @Operation(summary = "Change the status of an event to \"cancelled\"")
     @PostMapping(path = "/{eventId}/cancel")
     public ResponseEntity<MessageResponse> cancelEvent(
             @PathVariable("eventId") UUID eventId,
@@ -105,6 +114,7 @@ public class EventController {
         return ResponseEntity.ok(this.eventService.cancelEvent(eventId, authUser));
     }
 
+    @Operation(summary = "Update a event by id")
     @PatchMapping(path = "/{eventId}")
     public ResponseEntity<MessageResponse> updateEvent(
             @PathVariable("eventId") UUID eventId,

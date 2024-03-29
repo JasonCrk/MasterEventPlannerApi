@@ -8,6 +8,7 @@ import com.LP2.EventScheduler.response.auth.JwtResponse;
 import com.LP2.EventScheduler.response.user.SimpleUserResponse;
 import com.LP2.EventScheduler.service.auth.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "Retrieve user by access token")
     @GetMapping(path = "/user")
     public ResponseEntity<SimpleUserResponse> retrieveUserByToken(
             @RequestAttribute("user") User authUser
@@ -35,6 +37,7 @@ public class AuthController {
         return ResponseEntity.ok(this.authService.retrieveUserByToken(authUser));
     }
 
+    @Operation(summary = "Verify access token")
     @GetMapping(path = "/verify")
     public ResponseEntity<MessageResponse> verifyToken(
             HttpServletRequest request
@@ -42,6 +45,7 @@ public class AuthController {
         return ResponseEntity.ok(this.authService.verifyToken(request));
     }
 
+    @Operation(summary = "Login")
     @PostMapping(path = "/login")
     public ResponseEntity<JwtResponse> login(
             @Valid @RequestBody LoginDTO loginData
@@ -49,6 +53,7 @@ public class AuthController {
         return new ResponseEntity<>(this.authService.login(loginData), HttpStatus.OK);
     }
 
+    @Operation(summary = "Sign up")
     @PostMapping(path = "/register")
     public ResponseEntity<JwtResponse> register(
             @Valid @RequestBody RegisterDTO registerData
@@ -56,6 +61,7 @@ public class AuthController {
         return new ResponseEntity<>(this.authService.register(registerData), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Refresh access token")
     @PostMapping(path = "/refresh-token")
     public ResponseEntity<JwtResponse> refreshToken(
             HttpServletRequest request,
