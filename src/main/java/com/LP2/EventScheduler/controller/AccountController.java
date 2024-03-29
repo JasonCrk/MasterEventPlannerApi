@@ -6,6 +6,8 @@ import com.LP2.EventScheduler.response.MessageResponse;
 import com.LP2.EventScheduler.response.account.AccountDetails;
 import com.LP2.EventScheduler.service.account.AccountService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "Account")
 @RestController
 @RequestMapping(path = "/api/accounts")
 @RequiredArgsConstructor

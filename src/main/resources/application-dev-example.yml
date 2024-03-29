@@ -44,8 +44,8 @@ firebase:
     cloud-storage:
         bucket-name:
 
-logging:
-    level:
-        org:
-            springframework:
-                jdbc: DEBUG
+springdoc:
+    swagger-ui:
+        enabled: true
+    api-docs:
+        enabled: true

@@ -8,6 +8,7 @@ import com.LP2.EventScheduler.response.connection.ConnectionResponse;
 import com.LP2.EventScheduler.response.invitation.InvitationResponse;
 import com.LP2.EventScheduler.service.connection.ConnectionService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "Connection")
 @RestController
 @RequestMapping(path = "/api/connections")
 @RequiredArgsConstructor
@@ -76,6 +78,6 @@ public class ConnectionController {
     public ResponseEntity<MessageResponse> removeConnection(
             @PathVariable("connectionId") UUID connectionId,
             @RequestAttribute("user") User authUser) {
-        return ResponseEntity.ok(connectionService.removeConnection(connectionId,authUser));
+        return ResponseEntity.ok(connectionService.removeConnection(connectionId, authUser));
     }
 }

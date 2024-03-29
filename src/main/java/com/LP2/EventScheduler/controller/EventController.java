@@ -12,6 +12,8 @@ import com.LP2.EventScheduler.response.event.EventDetails;
 import com.LP2.EventScheduler.response.event.EventItem;
 import com.LP2.EventScheduler.service.event.EventService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "Event")
 @RestController
 @RequestMapping(path = "/api/events")
 @RequiredArgsConstructor
@@ -90,7 +93,7 @@ public class EventController {
     public ResponseEntity<MessageResponse> removeEvent(
             @PathVariable("eventId") UUID eventId,
             @RequestAttribute("user") User user
-    ){
+    ) {
         return new ResponseEntity<>(this.eventService.removeEvent(eventId, user), HttpStatus.OK);
     }
 
