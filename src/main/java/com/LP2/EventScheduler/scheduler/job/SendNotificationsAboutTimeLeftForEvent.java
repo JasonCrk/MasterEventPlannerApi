@@ -7,11 +7,7 @@ import com.LP2.EventScheduler.model.Participation;
 import com.LP2.EventScheduler.model.enums.EventStatus;
 import com.LP2.EventScheduler.repository.EventRepository;
 import com.LP2.EventScheduler.repository.ParticipationRepository;
-
 import com.google.firebase.messaging.FirebaseMessagingException;
-
-import jakarta.transaction.Transactional;
-
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -36,7 +32,6 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
     @Autowired
     private Scheduler scheduler;
 
-    @Transactional
     @Override
     protected void executeInternal(JobExecutionContext context) {
         JobDataMap data = context.getMergedJobDataMap();
@@ -76,17 +71,17 @@ public class SendNotificationsAboutTimeLeftForEvent extends QuartzJobBean {
         }
 
         if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 0L) {
-            notificationMessage = "It's time for the \"" + event.getName() +  "\" event";
+            notificationMessage = "It's time for the \"" + event.getName() + "\" event";
 
             event.setStatus(EventStatus.IN_PROGRESS);
             this.eventRepository.save(event);
-        } else if (ChronoUnit.DAYS.between(currentTime, eventRealizationDate) == 1L) {
+        } else if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 1439L) {
             notificationMessage += "24 hours";
-        } else if (ChronoUnit.WEEKS.between(currentTime, eventRealizationDate) == 1L) {
+        } else if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 10079L) {
             notificationMessage += "one week";
-        } else if (ChronoUnit.MONTHS.between(currentTime, eventRealizationDate) == 1L) {
+        } else if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 43170L) {
             notificationMessage += "one month";
-        } else if (ChronoUnit.YEARS.between(currentTime, eventRealizationDate) == 1L) {
+        } else if (ChronoUnit.MINUTES.between(currentTime, eventRealizationDate) == 525295L) {
             notificationMessage += "one year";
         } else
             return;
