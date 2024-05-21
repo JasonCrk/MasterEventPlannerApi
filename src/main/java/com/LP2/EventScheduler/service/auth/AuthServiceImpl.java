@@ -61,7 +61,6 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         var savedUser = userRepository.save(user);
-        System.out.println("User ID: " + savedUser.getId() + " & Account ID: " + savedAccount.getId());
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
@@ -105,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
         final String refreshToken;
         final String userEmail;
 
-        if (authHeader == null ||!authHeader.startsWith("Bearer "))
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new NotAuthenticatedException();
 
         refreshToken = authHeader.substring(7);
@@ -140,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
         final String accessToken;
         final String userEmail;
 
-        if (authHeader == null ||!authHeader.startsWith("Bearer "))
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new NotAuthenticatedException();
 
         accessToken = authHeader.substring(7);
